@@ -29,7 +29,7 @@ After a long time of playing, multiple reincarnations, and reaping the item shop
 Your progress will automatically be saved every 10 seconds, as well as whenever you close the game. If you wish to completely restart the game at any point, or if you wish to transfer your save data to another system, first close the game, then delete/move the `save_data.dat` file. If you are moving it, keep in mind that it must be located in the same folder as `CandyClicker.exe` to be detected.  
 *Further information about the structure of the save file can be found in `SAVEFILE.md`*.
 
-### Credits and Attributions
+## Credits and Attributions
 
 Programming and Design: Tolly Hill  
 Feature Testing: Fin Griffiths; Tom Reynolds; Riley Beer  
