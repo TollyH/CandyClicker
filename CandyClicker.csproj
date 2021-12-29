@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>candy_xnp_icon.ico</ApplicationIcon>
+    <Authors>Tolly Hill</Authors>
+    <Product>Candy Clicker</Product>
+    <PackageId>Candy Clicker</PackageId>
+    <Description>A simple candy clicking game written in C# and WPF</Description>
+    <Copyright>Copyright © 2021  Ptolemy Hill</Copyright>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="candy-reincarnate.png" />
+    <None Remove="candy-special.png" />
+    <None Remove="candy.png" />
+    <None Remove="candy_xnp_icon.ico" />
+    <None Remove="mikachanALL.ttc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="candy-reincarnate.png" />
+    <Resource Include="candy-special.png" />
+    <Resource Include="candy.png" />
+    <Resource Include="candy_xnp_icon.ico" />
+    <Resource Include="mikachanALL.ttc" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,176 @@
+﻿<!--
+    Candy Clicker ver. 1.0.0
+    Copyright © 2021  Ptolemy Hill
+-->
+<Window x:Name="windowCandyClicker" x:Class="CandyClicker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CandyClicker"
+        mc:Ignorable="d"
+        Title="Candy Clicker" Width="360" Height="510" MinHeight="360" MinWidth="360" Icon="/candy_xnp_icon.ico" Closing="WindowCandyClicker_Closing" Background="#FF86FFFA" SizeChanged="WindowCandyClicker_SizeChanged" KeyDown="WindowCandyClicker_KeyDown">
+    <Grid x:Name="gridCandyClicker" KeyDown="WindowCandyClicker_KeyDown">
+        <Canvas x:Name="canvasCandyRain" Height="195" VerticalAlignment="Top" Margin="0,105,0,0" ClipToBounds="True"/>
+        <TextBlock x:Name="textBlockScore" Text="{Binding CandyScore, ElementName=windowCandyClicker, FallbackValue=X\,XXX\,XXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" FontSize="36" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockPerClick" Text="{Binding CandyPerClick, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/c, StringFormat=+\{0:N0\}/c, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,50,5,5" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockSpecial" Text="(x10/c)" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,73,0,0" FontSize="18" FontWeight="Bold" Foreground="#ebba0c" FontFamily="{StaticResource mikachan}" TextAlignment="Center" Visibility="Hidden"/>
+        <TextBlock x:Name="textBlockPerSecond" Text="{Binding CandyPerSecond, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/s, StringFormat=+\{0:N0\}/s, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,50,25,5" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockReincarnated" Text="{Binding CandyPSReincarnationMultiplier, ElementName=windowCandyClicker, FallbackValue=(xXX/s), StringFormat=(x\{0:N0\}/s), TargetNullValue=1}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,73,10,0" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}" Visibility="Hidden" TextAlignment="Center"/>
+        <TextBlock x:Name="textBlockClicksPerSecond" Text="0.0 CPS" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,73,0,0" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
+        <Button x:Name="buttonReincarnate" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Left" BorderThickness="1" Height="35" Width="35" Background="#19000000" BorderBrush="#3F000000" Click="ButtonReincarnate_Click">
+            <Image Source="/candy-reincarnate.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+        </Button>
+        <Button x:Name="buttonHelp" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="1" Height="35" Width="35" Background="#19000000" BorderBrush="#3F000000" Click="ButtonHelp_Click" Content="?" FontFamily="{StaticResource mikachan}" FontSize="24" FontWeight="Bold" Foreground="#FF1A38DE"/>
+        <Image x:Name="imageCandy" Source="/candy.png" VerticalAlignment="Top" HorizontalAlignment="Center" Width="172" Height="125" Margin="0,140,0,0" MouseDown="ImageCandy_MouseDown" RenderOptions.BitmapScalingMode="HighQuality">
+            <Image.RenderTransform>
+                <TransformGroup x:Name="transformGroupCandy">
+                    <RotateTransform x:Name="rotateTransformCandy" CenterX="86" CenterY="62.5"/>
+                    <ScaleTransform x:Name="scaleTransformCandy" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}" CenterX="86" CenterY="62.5"/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <Rectangle x:Name="rectangleBonusBackground" Height="10" Margin="0,95,0,0" VerticalAlignment="Top" StrokeThickness="0" Fill="#66000000"/>
+        <Rectangle x:Name="rectangleBonusProgress" HorizontalAlignment="Left" Height="10" Margin="0,95,0,0" VerticalAlignment="Top" Width="0" StrokeThickness="0" Fill="#FFFF4141"/>
+        <ScrollViewer Margin="0,300,0,0">
+            <StackPanel x:Name="stackPanelShop" Background="#22000000"/>
+        </ScrollViewer>
+        <TextBlock x:Name="textBlockOverflow" Text="" VerticalAlignment="Top" Margin="10,281,10,0" FontSize="16" FontWeight="Bold" Foreground="#ebba0c" FontFamily="{StaticResource mikachan}"/>
+        <Grid x:Name="gridReincarnate" Background="#BF000000" Visibility="Collapsed">
+            <Border Margin="30" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Margin="10,10,10,0" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Reincarnation" FontWeight="Bold" TextAlignment="Center"/>
+                        <TextBlock x:Name="textBlockReincarnateDescription" Margin="10,5,10,10" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold"/>
+                        <Button x:Name="buttonAgreeToReincarnate" Margin="10,5,10,5" Background="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="Reincarnate" FontFamily="{StaticResource mikachan}" FontSize="22" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,5,1,5" Click="ButtonAgreeToReincarnate_Click"/>
+                        <TextBlock x:Name="textBlockCancelReincarnate" VerticalAlignment="Bottom" Text="Nevermind" Margin="10,0,10,10" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}" TextAlignment="Center" FontSize="16" Background="#00000000" MouseDown="TextBlockCancelReincarnate_MouseDown" FontWeight="Bold"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        <Grid x:Name="gridCheat" Background="#BF000000" Visibility="Collapsed">
+            <Border Margin="30" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Margin="10,10,10,0" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Cheat Menu" FontWeight="Bold" TextAlignment="Center"/>
+                        <Button x:Name="buttonCloseCheat" Background="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,1,1,1" Click="ButtonCloseCheat_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Total Candies"/>
+                        <TextBox x:Name="textBoxCheatCandies" Margin="10,5,10,5" SelectionBrush="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFFF4141" FontSize="16"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Candies Per Click"/>
+                        <TextBox x:Name="textBoxCheatPerClick" Margin="10,5,10,5" SelectionBrush="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFFF4141" FontSize="16"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Candies Per Second"/>
+                        <TextBox x:Name="textBoxCheatPerSecond" Margin="10,5,10,5" SelectionBrush="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFFF4141" FontSize="16"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Reincarnation Multiplier"/>
+                        <TextBox x:Name="textBoxCheatPSMultiplier" Margin="10,5,10,5" SelectionBrush="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFFF4141" FontSize="16"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Reincarnation Count"/>
+                        <TextBox x:Name="textBoxCheatReincarnationCount" Margin="10,5,10,5" SelectionBrush="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFFF4141" FontSize="16"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Overflow Count"/>
+                        <TextBox x:Name="textBoxCheatOverflowCount" Margin="10,5,10,5" SelectionBrush="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFFF4141" FontSize="16"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Candy Meter Progression (0-999)"/>
+                        <TextBox x:Name="textBoxCheatSpecialProgress" Margin="10,5,10,5" SelectionBrush="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFFF4141" FontSize="16"/>
+                        <CheckBox x:Name="checkBoxCheatTaskbarHide" Margin="10,5,10,5" Background="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="Hide In Taskbar" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <CheckBox x:Name="checkBoxCheatDisableSaveChecks" Margin="10,5,10,5" Background="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="Disable Save Integrity" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <CheckBox x:Name="checkBoxCheatDisableAutoclickerCheck" Margin="10,5,10,5" Background="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="Allow Autoclickers" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <CheckBox x:Name="checkBoxCheatStopCandyRain" Margin="10,5,10,5" Background="#FFFF4141" Foreground="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="Stop Candy Rain" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <Button x:Name="buttonCommitCheat" Margin="10,5,10,5" Background="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="Save Changes" FontFamily="{StaticResource mikachan}" FontSize="22" FontWeight="Bold" Foreground="#FFFFFFFF" Padding="1,5,1,5" Click="ButtonCommitCheat_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        <Grid x:Name="gridHelp" Background="#BF000000" Visibility="Collapsed">
+            <Border Margin="30" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Margin="10,10,10,0" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Help" FontWeight="Bold" TextAlignment="Center"/>
+                        <Button x:Name="buttonCloseHelp" Background="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,1,1,1" Click="ButtonCloseHelp_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>
+                        <RichTextBox x:Name="textBlockHelpDescription" Margin="10,5,10,10" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalScrollBarVisibility="Auto" BorderThickness="0,0,0,0" IsReadOnly="True" IsUndoEnabled="False" AutoWordSelection="False" AcceptsReturn="False">
+                            <FlowDocument>
+                                <Paragraph>
+                                    <Run Text="Welcome to Candy Clicker!" FontSize="22"/>
+                                    <LineBreak/>
+                                    <Run Text="The aim of the game is simple: get as much candy as you possibly can! Clicking the large candy in middle will increment your total candies, shown at the very top. Initially, each click will be worth one candy, but this number will soon rise as you buy items from the shop. The number of candies a single click will give you is shown to the left with the abbreviation"/>
+                                    <Run Text="/c," FontStyle="Italic"/>
+                                    <Run Text="and the number of times you are clicking per second is shown in the centre with the abbreviation"/>
+                                    <Run Text="CPS." FontStyle="Italic"/>
+                                    <Run Text="After buying items from the shop, you will also begin to gain candies every second without the need to click. The number of candies you are receiving per second is show to the right with the abbreviation"/>
+                                    <Run Text="/s." FontStyle="Italic"/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="The Shop" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="The shop is located at the bottom of the window, listing of all the items that can be bought. The number to the right of each item is its price in candies, which will be red if you can afford the item, or grey if you cannot. To buy an item, simply click on it in the shop, and the cost in candies will immediately be removed from your total balance in return for an increase in your candies per second and candies per click. To see how much a particular item will increase your stats by, hover over it with the mouse pointer; the increase in stats, along with the number of times you have bought the item previously, will be displayed. Every time you buy an item from the shop, its price will increase by a quarter of its original price, so make sure to buy a wide range of items!"/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="Rare Candies" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="At random intervals, a golden candy may fall across the screen."/>
+                                    <Image Source="/candy-special.png" Width="30"/>
+                                    <LineBreak/>
+                                    <Run Text="If you manage to click it before it's gone, you will be rewarded with a single burst of 500x your current candies per click value."/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="Candy Meter" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="As you click the large candy, the grey bar underneath your stats will gradually begin to fill up. After 1,000 clicks, the bar will be completely full. Once this happens, you will have 5 seconds to click the (now golden) candy as much as possible. During this period, each click will be worth 10x what a click would normally be worth, so be sure to get as many clicks in as you can."/>
+                                    <LineBreak/>
+                                    <Run Text="Note that it will always take 1,000 clicks to fill the meter, regardless of your candies per click value. During the 5 second period, the candy rain in the background will turn golden as well as the large candy; keep in mind that these golden candies cannot be clicked as if they were a rare candy." FontStyle="Italic"/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="Reincarnation" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="Reincarnation allows you to start the game anew with all your stats and the shop reset. In return, you will be granted a multiplier on your candies per second in your new game. You can reincarnate more than once, although each reincarnation will be harder to attain than the last, and you cannot reincarnate in a way that would result in you having a smaller multiplier than you currently have. For more information, click the reincarnation button in the top-left."/>
+                                    <Image Source="/candy-reincarnate.png" Width="30"/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="Overflow Stars" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="After a long time of playing, multiple reincarnations, and reaping the item shop for all it's worth, your candies will likely be growing at an immense pace. You may feel like you've achieved everything possible, but there is still one last trophy for you to add to your collection. Overflow stars. If you manage to make your total candies exceed what the game can handle (a number which is 20 digits long, or over 10 quintillion), then you will be awarded a golden star ("/><!--
+                                    --><Run Text="★" Foreground="#FFEBBA0C"/><!--
+                                    --><Run Text=") just above the item shop. Your candies will wrap around back to a lower number, and you can feel a sense of immense pride in knowing that you've gained so much candy that not even a computer can keep count anymore. A new star will be given every single time you manage to reach the limit. While they're not worth anything in the shop, if you've managed to reach this point, buying items probably isn't your highest priority anyway."/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="Save Data" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="Your progress will automatically be saved every 10 seconds, as well as whenever you close the game. If you wish to completely restart the game at any point, or if you wish to transfer your save data to another system, first close the game, then delete/move the &quot;save_data.dat&quot; file. If you are moving it, keep in mind that it must be located in the same folder as &quot;CandyClicker.exe&quot; to be detected."/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="Credits and Attributions" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="Programming and Design:"/>
+                                    <LineBreak/>
+                                    <Run Text="Tolly Hill"/>
+                                    <LineBreak/>
+                                    <LineBreak/>
+                                    <Run Text="Feature Testing:"/>
+                                    <LineBreak/>
+                                    <Run Text="Fin Griffiths; Tom Reynolds; Riley Beer"/>
+                                    <LineBreak/>
+                                    <LineBreak/>
+                                    <Run Text="Initial Inspiration and Candy Picture:"/>
+                                    <LineBreak/>
+                                    <Run Text="Oscar O'Brien"/>
+                                    <LineBreak/>
+                                    <LineBreak/>
+                                    <Run Text="Font:"/>
+                                    <LineBreak/>
+                                    <Run Text="mikachan"/>
+                                    <Run Text="§" FontSize="18"/>
+                                </Paragraph>
+                                <Paragraph TextAlignment="Center">
+                                    <Run FontFamily="Segoe UI" Text="Copyright © 2021  Ptolemy Hill" Foreground="Gray" FontSize="12"/>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

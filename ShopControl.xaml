@@ -1,0 +1,25 @@
+﻿<!--
+    Candy Clicker ver. 1.0.0
+    Copyright © 2021  Ptolemy Hill
+-->
+<UserControl x:Name="userControlShopItem" x:Class="CandyClicker.ShopControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CandyClicker"
+             mc:Ignorable="d" 
+             Height="24" d:Width="300" MouseEnter="UserControlShopItem_MouseEnter" MouseLeave="UserControlShopItem_MouseLeave" MouseDown="UserControlShopItem_MouseDown">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF7FE2DE"/>
+                <GradientStop Color="#FFC6F9F7" Offset="0.5"/>
+                <GradientStop Color="#FF7FE2DE" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <TextBlock x:Name="textBlockName" Text="{Binding ShopItemName, ElementName=userControlShopItem, FallbackValue=XXXXXXXXXXXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" Margin="5,0,0,0" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockPrice" Text="{Binding ShopItemPrice, ElementName=userControlShopItem, FallbackValue=(X\,XXX\,XXX), StringFormat=(\{0:N0\}), TargetNullValue=0}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="18" FontWeight="Bold" Foreground="{Binding PriceForeground, ElementName=userControlShopItem, FallbackValue=#FFFF4141, TargetNullValue=#FFFF4141}" Margin="0,0,5,0" FontFamily="{StaticResource mikachan}"/>
+        <Rectangle x:Name="rectangleFlasher" Fill="White" Opacity="0"/>
+    </Grid>
+</UserControl>
