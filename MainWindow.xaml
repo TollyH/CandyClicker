@@ -1,5 +1,5 @@
 ﻿<!--
-    Candy Clicker ver. 1.0.0
+    Candy Clicker ver. 1.0.1
     Copyright © 2021  Ptolemy Hill
 -->
 <Window x:Name="windowCandyClicker" x:Class="CandyClicker.MainWindow"
@@ -9,8 +9,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CandyClicker"
         mc:Ignorable="d"
-        Title="Candy Clicker" Width="360" Height="510" MinHeight="360" MinWidth="360" Icon="/candy_xnp_icon.ico" Closing="WindowCandyClicker_Closing" Background="#FF86FFFA" SizeChanged="WindowCandyClicker_SizeChanged" KeyDown="WindowCandyClicker_KeyDown">
-    <Grid x:Name="gridCandyClicker" KeyDown="WindowCandyClicker_KeyDown">
+        Title="Candy Clicker" Width="360" Height="510" MinHeight="360" MinWidth="360" Icon="/candy_xnp_icon.ico" Closing="WindowCandyClicker_Closing" Background="#FF86FFFA" SizeChanged="WindowCandyClicker_SizeChanged">
+    <Grid x:Name="gridCandyClicker" KeyDown="GridCandyClicker_KeyDown" Focusable="True">
         <Canvas x:Name="canvasCandyRain" Height="195" VerticalAlignment="Top" Margin="0,105,0,0" ClipToBounds="True"/>
         <TextBlock x:Name="textBlockScore" Text="{Binding CandyScore, ElementName=windowCandyClicker, FallbackValue=X\,XXX\,XXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" FontSize="36" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
         <TextBlock x:Name="textBlockPerClick" Text="{Binding CandyPerClick, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/c, StringFormat=+\{0:N0\}/c, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,50,5,5" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>

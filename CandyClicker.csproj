@@ -11,6 +11,9 @@
     <Description>A simple candy clicking game written in C# and WPF</Description>
     <Copyright>Copyright © 2021  Ptolemy Hill</Copyright>
     <NeutralLanguage>en-GB</NeutralLanguage>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,5 +1,5 @@
 ﻿/*
- * Candy Clicker ver. 1.0.0
+ * Candy Clicker ver. 1.0.1
  * Copyright © 2021  Ptolemy Hill
  */
 using System;
@@ -283,6 +283,7 @@ namespace CandyClicker
 
         private void OpenHelpPopUp()
         {
+            timerPerSecond.Stop();
             gridHelp.Visibility = Visibility.Visible;
 
             Storyboard sb = new()
@@ -305,6 +306,7 @@ namespace CandyClicker
 
         private void CloseHelpPopUp()
         {
+            timerPerSecond.Start();
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -327,6 +329,7 @@ namespace CandyClicker
 
         private void OpenCheatPopUp()
         {
+            timerPerSecond.Stop();
             gridCheat.Visibility = Visibility.Visible;
 
             Storyboard sb = new()
@@ -349,6 +352,7 @@ namespace CandyClicker
 
         private void CloseCheatPopUp()
         {
+            timerPerSecond.Start();
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -376,6 +380,7 @@ namespace CandyClicker
 
         private void OpenReincarnationPopUp()
         {
+            timerPerSecond.Stop();
             ulong reincarnationCost = CalculateReincarnationCost();
             textBlockReincarnateDescription.Text = reincarnationDescription.Replace("$CANDY_DIVISOR", (100000000 * (ReincarnateCounter + 1)).ToString("N0"))
                 .Replace("$CANDY_REQUIRE", reincarnationCost.ToString("N0"));
@@ -422,6 +427,7 @@ namespace CandyClicker
 
         private void CloseReincarnationPopUp()
         {
+            timerPerSecond.Start();
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -444,15 +450,22 @@ namespace CandyClicker
 
         private void UpdateOverflowBanner()
         {
-            string targetNewString = new('★', (int)OverflowCounter);
-            // Check if the target number of stars will actually fit on-screen
-            // If not, replace it with a numeric value instead
-            Typeface typeface = new(textBlockOverflow.FontFamily, textBlockOverflow.FontStyle, textBlockOverflow.FontWeight, textBlockOverflow.FontStretch);
-            FormattedText format = new(targetNewString, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, textBlockOverflow.FontSize,
-                textBlockOverflow.Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-            textBlockOverflow.Text = format.Width > gridCandyClicker.ActualWidth - (textBlockOverflow.Margin.Left + textBlockOverflow.Margin.Right)
-                ? $"★ x {OverflowCounter}"
-                : targetNewString;
+            if (OverflowCounter < 1000)
+            {
+                // Check if the target number of stars will actually fit on-screen
+                // If not, replace it with a numeric value instead
+                string targetNewString = new('★', (int)OverflowCounter);
+                Typeface typeface = new(textBlockOverflow.FontFamily, textBlockOverflow.FontStyle, textBlockOverflow.FontWeight, textBlockOverflow.FontStretch);
+                FormattedText format = new(targetNewString, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, textBlockOverflow.FontSize,
+                    textBlockOverflow.Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+                textBlockOverflow.Text = format.Width > gridCandyClicker.ActualWidth - (textBlockOverflow.Margin.Left + textBlockOverflow.Margin.Right)
+                    ? $"★ x {OverflowCounter}"
+                    : targetNewString;
+            }
+            else
+            {
+                textBlockOverflow.Text = $"★ x {OverflowCounter}";
+            }
         }
 
         private void ShopItem_MouseDown(object sender, MouseButtonEventArgs e)
@@ -585,6 +598,7 @@ namespace CandyClicker
         {
             Dispatcher.Invoke(() =>
             {
+                _ = gridCandyClicker.Focus();
                 if (CandyPSReincarnationMultiplier <= 1)
                 {
                     GiveCandy(CandyPerSecond);
@@ -786,7 +800,7 @@ namespace CandyClicker
             gridCheat.Visibility = Visibility.Collapsed;
         }
 
-        private void WindowCandyClicker_KeyDown(object sender, KeyEventArgs e)
+        private void GridCandyClicker_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == cheatMenuKeys[cheatMenuKeyProgression])
             {
@@ -920,7 +934,6 @@ namespace CandyClicker
             if (failed != "")
             {
                 _ = MessageBox.Show($"The following value(s) failed to parse: {failed}these values have been ignored.", "Parsing Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                _ = windowCandyClicker.Focus();
             }
         }
 
