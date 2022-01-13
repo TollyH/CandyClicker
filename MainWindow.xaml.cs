@@ -1,5 +1,5 @@
 ﻿/*
- * Candy Clicker ver. 1.0.1
+ * Candy Clicker ver. 1.0.2
  * Copyright © 2021  Ptolemy Hill
  */
 using System;
@@ -58,6 +58,7 @@ namespace CandyClicker
 
         private uint clicksTowardSpecial = 0;
         private bool isSpecialActive = false;
+        private bool isEndGameVisualActive = false;
 
         private bool doSaveIntegrityChecks = true;
         private bool doAutoClickPrevention = true;
@@ -279,6 +280,62 @@ namespace CandyClicker
             imageCandy.Source = regularSource;
             clicksTowardSpecial = 0;
             isSpecialActive = false;
+        }
+
+        private void EndGameVisualUpdate()
+        {
+            isEndGameVisualActive = true;
+            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy_special_dzI_icon.ico"));
+            Storyboard sb = new()
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.25))
+            };
+
+            ColorAnimation fadeToGold = new()
+            {
+                From = ((SolidColorBrush)Background).Color,
+                To = new Color()
+                {
+                    R = 0xE5,
+                    G = 0xF1,
+                    B = 0x9E,
+                    A = 0xFF
+                },
+                Duration = sb.Duration
+            };
+            Storyboard.SetTarget(fadeToGold, windowCandyClicker);
+            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Button.Background).(SolidColorBrush.Color)"));
+            sb.Children.Add(fadeToGold);
+
+            sb.Begin();
+        }
+
+        private void UndoEndGameVisualUpdate()
+        {
+            isEndGameVisualActive = false;
+            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy_xnp_icon.ico"));
+            Storyboard sb = new()
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.25))
+            };
+
+            ColorAnimation fadeToGold = new()
+            {
+                From = ((SolidColorBrush)Background).Color,
+                To = new Color()
+                {
+                    R = 0x86,
+                    G = 0xF1,
+                    B = 0xE6,
+                    A = 0xFF
+                },
+                Duration = sb.Duration
+            };
+            Storyboard.SetTarget(fadeToGold, windowCandyClicker);
+            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Button.Background).(SolidColorBrush.Color)"));
+            sb.Children.Add(fadeToGold);
+
+            sb.Begin();
         }
 
         private void OpenHelpPopUp()
@@ -613,6 +670,14 @@ namespace CandyClicker
                     {
                         GiveCandy(CandyPerSecond * CandyPSReincarnationMultiplier);
                     }
+                }
+                if (!isEndGameVisualActive && CandyPSReincarnationMultiplier == ulong.MaxValue)
+                {
+                    EndGameVisualUpdate();
+                }
+                else if (isEndGameVisualActive && CandyPSReincarnationMultiplier != ulong.MaxValue)
+                {
+                    UndoEndGameVisualUpdate();
                 }
                 if ((DateTime.Now - lastClickTime).TotalSeconds > 1)
                 {

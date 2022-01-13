@@ -1,5 +1,5 @@
 ﻿/*
- * Candy Clicker ver. 1.0.1
+ * Candy Clicker ver. 1.0.2
  * Copyright © 2021  Ptolemy Hill
  */
 namespace CandyClicker

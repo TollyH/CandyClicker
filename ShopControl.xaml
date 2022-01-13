@@ -1,5 +1,5 @@
 ﻿<!--
-    Candy Clicker ver. 1.0.1
+    Candy Clicker ver. 1.0.2
     Copyright © 2021  Ptolemy Hill
 -->
 <UserControl x:Name="userControlShopItem" x:Class="CandyClicker.ShopControl"
@@ -13,9 +13,9 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF7FE2DE"/>
-                <GradientStop Color="#FFC6F9F7" Offset="0.5"/>
-                <GradientStop Color="#FF7FE2DE" Offset="1"/>
+                <GradientStop Color="#33525252"/>
+                <GradientStop Color="#55FFFFFF" Offset="0.5"/>
+                <GradientStop Color="#33525252" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
         <TextBlock x:Name="textBlockName" Text="{Binding ShopItemName, ElementName=userControlShopItem, FallbackValue=XXXXXXXXXXXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" Margin="5,0,0,0" FontFamily="{StaticResource mikachan}"/>

@@ -1,5 +1,5 @@
 ﻿<!--
-    Candy Clicker ver. 1.0.1
+    Candy Clicker ver. 1.0.2
     Copyright © 2021  Ptolemy Hill
 -->
 <Window x:Name="windowCandyClicker" x:Class="CandyClicker.MainWindow"
@@ -33,12 +33,12 @@
         <Rectangle x:Name="rectangleBonusBackground" Height="10" Margin="0,95,0,0" VerticalAlignment="Top" StrokeThickness="0" Fill="#66000000"/>
         <Rectangle x:Name="rectangleBonusProgress" HorizontalAlignment="Left" Height="10" Margin="0,95,0,0" VerticalAlignment="Top" Width="0" StrokeThickness="0" Fill="#FFFF4141"/>
         <ScrollViewer Margin="0,300,0,0">
-            <StackPanel x:Name="stackPanelShop" Background="#22000000"/>
+            <StackPanel x:Name="stackPanelShop" Background="Transparent"/>
         </ScrollViewer>
         <TextBlock x:Name="textBlockOverflow" Text="" VerticalAlignment="Top" Margin="10,281,10,0" FontSize="16" FontWeight="Bold" Foreground="#ebba0c" FontFamily="{StaticResource mikachan}"/>
         <Grid x:Name="gridReincarnate" Background="#BF000000" Visibility="Collapsed">
-            <Border Margin="30" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Border Margin="25" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
                     <StackPanel>
                         <TextBlock Margin="10,10,10,0" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Reincarnation" FontWeight="Bold" TextAlignment="Center"/>
                         <TextBlock x:Name="textBlockReincarnateDescription" Margin="10,5,10,10" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold"/>
@@ -49,8 +49,8 @@
             </Border>
         </Grid>
         <Grid x:Name="gridCheat" Background="#BF000000" Visibility="Collapsed">
-            <Border Margin="30" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Border Margin="25" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
                     <StackPanel>
                         <TextBlock Margin="10,10,10,0" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Cheat Menu" FontWeight="Bold" TextAlignment="Center"/>
                         <Button x:Name="buttonCloseCheat" Background="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,1,1,1" Click="ButtonCloseCheat_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>
@@ -78,8 +78,8 @@
             </Border>
         </Grid>
         <Grid x:Name="gridHelp" Background="#BF000000" Visibility="Collapsed">
-            <Border Margin="30" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Border Margin="25" BorderBrush="#FFFF4141" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
                     <StackPanel>
                         <TextBlock Margin="10,10,10,0" Foreground="#FFFF4141" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Help" FontWeight="Bold" TextAlignment="Center"/>
                         <Button x:Name="buttonCloseHelp" Background="#FFFF4141" BorderBrush="#FFC72323" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,1,1,1" Click="ButtonCloseHelp_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>

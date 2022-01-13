@@ -11,9 +11,9 @@
     <Description>A simple candy clicking game written in C# and WPF</Description>
     <Copyright>Copyright © 2021  Ptolemy Hill</Copyright>
     <NeutralLanguage>en-GB</NeutralLanguage>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
-    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,6 +30,7 @@
     <None Remove="candy-reincarnate.png" />
     <None Remove="candy-special.png" />
     <None Remove="candy.png" />
+    <None Remove="candy_special_dzI_icon.ico" />
     <None Remove="candy_xnp_icon.ico" />
     <None Remove="mikachanALL.ttc" />
   </ItemGroup>
@@ -38,6 +39,7 @@
     <Resource Include="candy-reincarnate.png" />
     <Resource Include="candy-special.png" />
     <Resource Include="candy.png" />
+    <Resource Include="candy_special_dzI_icon.ico" />
     <Resource Include="candy_xnp_icon.ico" />
     <Resource Include="mikachanALL.ttc" />
   </ItemGroup>
