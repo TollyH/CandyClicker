@@ -1,5 +1,5 @@
 ﻿/*
- * Candy Clicker ver. 1.0.2
+ * Candy Clicker ver. 1.0.3
  * Copyright © 2021  Ptolemy Hill
  */
 using System;
@@ -69,6 +69,8 @@ namespace CandyClicker
 
         // Used to calculate CPS and prevent autoclicker usage
         private DateTime lastClickTime = DateTime.MinValue;
+        private int clicksThisSecond = 0;
+        private readonly List<int> previousClicksPerSecond = new();
 
         private readonly System.Timers.Timer timerPerSecond = new(1000);
         private readonly System.Timers.Timer timerCandyRain = new();
@@ -86,6 +88,8 @@ namespace CandyClicker
             doCandyRain = !File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\no-candy-rain");
 
             InitializeComponent();
+
+            _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphEndGamePerSecond);
 
             LoadSaveData();
             ReloadShop();
@@ -285,6 +289,8 @@ namespace CandyClicker
         private void EndGameVisualUpdate()
         {
             isEndGameVisualActive = true;
+            _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphCandiesPerSecond);
+            flowDocumentCandiesPerSecond.Blocks.Add(paragraphEndGamePerSecond);
             Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy_special_dzI_icon.ico"));
             Storyboard sb = new()
             {
@@ -313,6 +319,8 @@ namespace CandyClicker
         private void UndoEndGameVisualUpdate()
         {
             isEndGameVisualActive = false;
+            _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphEndGamePerSecond);
+            flowDocumentCandiesPerSecond.Blocks.Add(paragraphCandiesPerSecond);
             Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy_xnp_icon.ico"));
             Storyboard sb = new()
             {
@@ -580,7 +588,7 @@ namespace CandyClicker
 
         private void ImageCandy_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left && (DateTime.Now > lastClickTime + new TimeSpan(500000) || !doAutoClickPrevention))
+            if (e.ChangedButton == MouseButton.Left && (DateTime.Now > lastClickTime + new TimeSpan((long)(TimeSpan.TicksPerSecond * 0.04)) || !doAutoClickPrevention))
             {
                 GiveCandy(isSpecialActive ? CandyPerClick * 10 : CandyPerClick);
                 if (!isSpecialActive)
@@ -596,8 +604,8 @@ namespace CandyClicker
                     }
                 }
 
-                textBlockClicksPerSecond.Text = $"{1 / (DateTime.Now - lastClickTime).TotalSeconds:0.0} CPS";
                 lastClickTime = DateTime.Now;
+                clicksThisSecond++;
 
                 if (rng.Next(10) == 0)
                 {
@@ -679,10 +687,28 @@ namespace CandyClicker
                 {
                     UndoEndGameVisualUpdate();
                 }
-                if ((DateTime.Now - lastClickTime).TotalSeconds > 1)
+                richTextBoxCandiesPerSecond.Visibility = isEndGameVisualActive && CandyPerSecond == 0 ? Visibility.Collapsed : Visibility.Visible;
+                if ((DateTime.Now - lastClickTime).TotalSeconds >= 5)
                 {
-                    // Reset CPS timer as player has not clicked for over a second
+                    previousClicksPerSecond.Clear();
                     textBlockClicksPerSecond.Text = "0.0 CPS";
+                }
+                else
+                {
+                    previousClicksPerSecond.Add(clicksThisSecond);
+                    clicksThisSecond = 0;
+                    // First value is skipped as it will most likely be lower than expected
+                    if (previousClicksPerSecond.Count >= 2)
+                    {
+                        textBlockClicksPerSecond.Text = $"{(double)previousClicksPerSecond.Skip(1).Sum() / (previousClicksPerSecond.Count - 1):0.0} CPS";
+                    }
+                }
+                if (!isEndGameVisualActive)
+                {
+                    ulong perSecond = CandyPSReincarnationMultiplier <= 1 ? CandyPerSecond : CandyPerSecond * CandyPSReincarnationMultiplier;
+                    double clicksPerSecond = previousClicksPerSecond.Count >= 2 ? (double)previousClicksPerSecond.Skip(1).Sum() / (previousClicksPerSecond.Count - 1) : 0;
+                    ulong perClick = isSpecialActive ? CandyPerClick * 10 : CandyPerClick;
+                    runCandiesPerSecond.Text = $"{Math.Round(perClick * clicksPerSecond) + perSecond:N0}";
                 }
                 if (rng.Next(60) == 0)
                 {

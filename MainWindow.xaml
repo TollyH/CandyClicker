@@ -1,5 +1,5 @@
 ﻿<!--
-    Candy Clicker ver. 1.0.2
+    Candy Clicker ver. 1.0.3
     Copyright © 2021  Ptolemy Hill
 -->
 <Window x:Name="windowCandyClicker" x:Class="CandyClicker.MainWindow"
@@ -13,11 +13,25 @@
     <Grid x:Name="gridCandyClicker" KeyDown="GridCandyClicker_KeyDown" Focusable="True">
         <Canvas x:Name="canvasCandyRain" Height="195" VerticalAlignment="Top" Margin="0,105,0,0" ClipToBounds="True"/>
         <TextBlock x:Name="textBlockScore" Text="{Binding CandyScore, ElementName=windowCandyClicker, FallbackValue=X\,XXX\,XXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" FontSize="36" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
-        <TextBlock x:Name="textBlockPerClick" Text="{Binding CandyPerClick, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/c, StringFormat=+\{0:N0\}/c, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,50,5,5" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockPerClick" Text="{Binding CandyPerClick, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/c, StringFormat=+\{0:N0\}/c, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,50,5,5" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
         <TextBlock x:Name="textBlockSpecial" Text="(x10/c)" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,73,0,0" FontSize="18" FontWeight="Bold" Foreground="#ebba0c" FontFamily="{StaticResource mikachan}" TextAlignment="Center" Visibility="Hidden"/>
-        <TextBlock x:Name="textBlockPerSecond" Text="{Binding CandyPerSecond, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/s, StringFormat=+\{0:N0\}/s, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,50,25,5" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockPerSecond" Text="{Binding CandyPerSecond, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/s, StringFormat=+\{0:N0\}/s, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,50,10,5" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
         <TextBlock x:Name="textBlockReincarnated" Text="{Binding CandyPSReincarnationMultiplier, ElementName=windowCandyClicker, FallbackValue=(xXX/s), StringFormat=(x\{0:N0\}/s), TargetNullValue=1}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,73,10,0" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}" Visibility="Hidden" TextAlignment="Center"/>
         <TextBlock x:Name="textBlockClicksPerSecond" Text="0.0 CPS" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,73,0,0" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}"/>
+        <RichTextBox x:Name="richTextBoxCandiesPerSecond" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,50,0,0" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" FontFamily="{StaticResource mikachan}" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}"  IsReadOnly="True" IsUndoEnabled="False" AutoWordSelection="False" AcceptsReturn="False">
+            <FlowDocument x:Name="flowDocumentCandiesPerSecond">
+                <Paragraph x:Name="paragraphCandiesPerSecond" TextAlignment="Center">
+                    <Run x:Name="runCandiesPerSecond" Text="X,XXX,XXX"/>
+                    <Image Source="/candy.png" Height="15" RenderOptions.BitmapScalingMode="HighQuality"/><!--
+                    --><Run Text="PS"/>
+                </Paragraph>
+                <Paragraph x:Name="paragraphEndGamePerSecond" TextAlignment="Center">
+                    <Run Text="1"/>
+                    <Run Text="★" Foreground="#ebba0c"/><!--
+                    --><Run Text="PS"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
         <Button x:Name="buttonReincarnate" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Left" BorderThickness="1" Height="35" Width="35" Background="#19000000" BorderBrush="#3F000000" Click="ButtonReincarnate_Click">
             <Image Source="/candy-reincarnate.png" RenderOptions.BitmapScalingMode="HighQuality"/>
         </Button>
@@ -106,7 +120,7 @@
                                     <Run Text="Rare Candies" FontSize="20"/>
                                     <LineBreak/>
                                     <Run Text="At random intervals, a golden candy may fall across the screen."/>
-                                    <Image Source="/candy-special.png" Width="30"/>
+                                    <Image Source="/candy-special.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     <LineBreak/>
                                     <Run Text="If you manage to click it before it's gone, you will be rewarded with a single burst of 500x your current candies per click value."/>
                                     <LineBreak/>
@@ -123,7 +137,7 @@
                                     <Run Text="Reincarnation" FontSize="20"/>
                                     <LineBreak/>
                                     <Run Text="Reincarnation allows you to start the game anew with all your stats and the shop reset. In return, you will be granted a multiplier on your candies per second in your new game. You can reincarnate more than once, although each reincarnation will be harder to attain than the last, and you cannot reincarnate in a way that would result in you having a smaller multiplier than you currently have. For more information, click the reincarnation button in the top-left."/>
-                                    <Image Source="/candy-reincarnate.png" Width="30"/>
+                                    <Image Source="/candy-reincarnate.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     <LineBreak/>
                                 </Paragraph>
                                 <Paragraph>
