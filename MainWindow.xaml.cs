@@ -1,5 +1,5 @@
 ﻿/*
- * Candy Clicker ver. 1.0.3
+ * Candy Clicker ver. 1.0.4
  * Copyright © 2021  Ptolemy Hill
  */
 using System;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -659,9 +660,9 @@ namespace CandyClicker
             }
         }
 
-        private void TimerPerSecond_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private async void TimerPerSecond_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(() =>
+            await Dispatcher.Invoke(async () =>
             {
                 _ = gridCandyClicker.Focus();
                 if (CandyPSReincarnationMultiplier <= 1)
@@ -720,9 +721,40 @@ namespace CandyClicker
                         Stretch = Stretch.Uniform,
                         StretchDirection = StretchDirection.Both
                     };
+
+                    double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)rareCandy.Width);
+                    Border alert = new()
+                    {
+                        Child = new TextBlock()
+                        {
+                            Text = "!",
+                            FontFamily = textBlockScore.FontFamily,
+                            FontSize = 24,
+                            FontWeight = FontWeights.Bold,
+                            Foreground = (Brush)new BrushConverter().ConvertFromString("#ebba0c"),
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center
+                        },
+                        Height = 30,
+                        Width = 30,
+                        BorderThickness = new Thickness(0),
+                        Background = Brushes.Blue,
+                        CornerRadius = new CornerRadius(30)
+                    };
+                    _ = canvasCandyRain.Children.Add(alert);
+                    Canvas.SetLeft(alert, xCoord);
+                    Canvas.SetTop(alert, 0);
+                    for (int i = 0; i < 5; i++)
+                    {
+                        alert.Visibility = Visibility.Visible;
+                        await Task.Delay(100);
+                        alert.Visibility = Visibility.Hidden;
+                        await Task.Delay(100);
+                    }
+                    canvasCandyRain.Children.Remove(alert);
+
                     rareCandy.MouseDown += RareCandy_MouseDown;
                     _ = canvasCandyRain.Children.Add(rareCandy);
-                    double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)rareCandy.Width);
                     Canvas.SetLeft(rareCandy, xCoord);
                     Canvas.SetTop(rareCandy, -rareCandy.Height);
 

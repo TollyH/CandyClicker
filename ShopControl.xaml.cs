@@ -1,5 +1,5 @@
 ﻿/*
- * Candy Clicker ver. 1.0.3
+ * Candy Clicker ver. 1.0.4
  * Copyright © 2021  Ptolemy Hill
  */
 using System;
