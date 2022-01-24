@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace CandyClicker
 {
@@ -46,7 +47,7 @@ namespace CandyClicker
             set
             {
                 SetValue(CandyPSReincarnationMultiplierProperty, value);
-                textBlockReincarnated.Visibility = value <= 1 ? Visibility.Hidden : Visibility.Visible;
+                textBlockReincarnated.Visibility = value is <= 1 or ulong.MaxValue ? Visibility.Hidden : Visibility.Visible;
             }
         }
 
@@ -67,6 +68,120 @@ namespace CandyClicker
         private byte cheatMenuKeyProgression = 0;
         // IAMALAZYCHEATER ;)
         private readonly Key[] cheatMenuKeys = new Key[15] { Key.I, Key.A, Key.M, Key.A, Key.L, Key.A, Key.Z, Key.Y, Key.C, Key.H, Key.E, Key.A, Key.T, Key.E, Key.R };
+
+        private enum EasterEggState
+        {
+            Normal,
+            Tolly,
+            Fin,
+            Riley,
+            Tom
+        }
+        private readonly Dictionary<EasterEggState, Key[]> easterEggKeys = new()
+        {
+            {
+                EasterEggState.Normal,
+                new Key[20]
+                {
+                    // SAVEMEFROMTHISHORROR
+                    Key.S, Key.A, Key.V, Key.E, Key.M, Key.E, Key.F, Key.R, Key.O, Key.M, Key.T, Key.H, Key.I, Key.S, Key.H, Key.O, Key.R, Key.R, Key.O, Key.R
+                }
+            },
+            {
+                EasterEggState.Tolly,
+                new Key[16]
+                {
+                    // IAMTHEPROGRAMMER
+                    Key.I, Key.A, Key.M, Key.T, Key.H, Key.E, Key.P, Key.R, Key.O, Key.G, Key.R, Key.A, Key.M, Key.M, Key.E, Key.R
+                }
+            },
+            {
+                EasterEggState.Fin,
+                new Key[12]
+                {
+                    // INSANITYISME
+                    Key.I, Key.N, Key.S, Key.A, Key.N, Key.I, Key.T, Key.Y, Key.I, Key.S, Key.M, Key.E
+                }
+            },
+            {
+                EasterEggState.Riley,
+                new Key[16]
+                {
+                    // PLEASELETMESLEEP
+                    Key.P, Key.L, Key.E, Key.A, Key.S, Key.E, Key.L, Key.E, Key.T, Key.M, Key.E, Key.S, Key.L, Key.E, Key.E, Key.P
+                }
+            },
+            {
+                EasterEggState.Tom,
+                new Key[15]
+                {
+                    // TOOHIGHTOATTEND
+                    Key.T, Key.O, Key.O, Key.H, Key.I, Key.G, Key.H, Key.T, Key.O, Key.A, Key.T, Key.T, Key.E, Key.N, Key.D
+                }
+            }
+        };
+        private readonly Dictionary<EasterEggState, BitmapImage[]> easterEggImages = new()
+        {
+            {
+                EasterEggState.Normal,
+                new BitmapImage[1]
+                {
+                    new BitmapImage(new Uri("pack://application:,,,/Images/candy.png"))
+                }
+            },
+            {
+                EasterEggState.Tolly,
+                new BitmapImage[2]
+                {
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-tolly-1.png")),
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-tolly-2.png"))
+                }
+            },
+            {
+                EasterEggState.Fin,
+                new BitmapImage[5]
+                {
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-fin-1.png")),
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-fin-2.png")),
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-fin-3.png")),
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-fin-4.png")),
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-fin-5.png"))
+                }
+            },
+            {
+                EasterEggState.Riley,
+                new BitmapImage[2]
+                {
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-riley-1.png")),
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-riley-2.png"))
+                }
+            },
+            {
+                EasterEggState.Tom,
+                new BitmapImage[2]
+                {
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-tom-1.png")),
+                    new BitmapImage(new Uri("pack://application:,,,/Images/easter-tom-2.png"))
+                }
+            }
+        };
+        private readonly Dictionary<EasterEggState, Color> easterEggBackgroundColors = new()
+        {
+            { EasterEggState.Normal, new Color() { R = 0x86, G = 0xFF, B = 0xFA, A = 0xFF } },
+            { EasterEggState.Tolly, new Color() { R = 0x46, G = 0x46, B = 0x46, A = 0xFF } },
+            { EasterEggState.Fin, new Color() { R = 0x94, G = 0x00, B = 0x00, A = 0xFF } },
+            { EasterEggState.Riley, new Color() { R = 0x00, G = 0x5C, B = 0x1D, A = 0xFF } },
+            { EasterEggState.Tom, new Color() { R = 0xFF, G = 0x82, B = 0x9E, A = 0xFF } }
+        };
+        private readonly Dictionary<EasterEggState, byte> easterEggKeyProgression = new()
+        {
+            { EasterEggState.Normal, 0 },
+            { EasterEggState.Tolly, 0 },
+            { EasterEggState.Fin, 0 },
+            { EasterEggState.Riley, 0 },
+            { EasterEggState.Tom, 0 }
+        };
+        private EasterEggState currentEasterEggState = EasterEggState.Normal;
 
         // Used to calculate CPS and prevent autoclicker usage
         private DateTime lastClickTime = DateTime.MinValue;
@@ -258,8 +373,11 @@ namespace CandyClicker
         private async void InitiateSpecial()
         {
             isSpecialActive = true;
-            ImageSource regularSource = imageCandy.Source;
-            imageCandy.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"));
+            ImageSource regularSource = new BitmapImage(new Uri("pack://application:,,,/Images/candy.png"));
+            if (currentEasterEggState == EasterEggState.Normal)
+            {
+                imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"));
+            }
             textBlockSpecial.Visibility = Visibility.Visible;
             rectangleBonusProgress.Fill = textBlockSpecial.Foreground;
 
@@ -278,11 +396,14 @@ namespace CandyClicker
             sb.Children.Add(changeWidth);
             sb.Begin();
 
-            await System.Threading.Tasks.Task.Delay(5000);
+            await Task.Delay(5000);
 
             rectangleBonusProgress.Fill = textBlockScore.Foreground;
             textBlockSpecial.Visibility = Visibility.Hidden;
-            imageCandy.Source = regularSource;
+            if (currentEasterEggState == EasterEggState.Normal)
+            {
+                imageCandy.Source = regularSource;
+            }
             clicksTowardSpecial = 0;
             isSpecialActive = false;
         }
@@ -292,7 +413,7 @@ namespace CandyClicker
             isEndGameVisualActive = true;
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphCandiesPerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphEndGamePerSecond);
-            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Icons/candy_special_dzI_icon.ico"));
+            Icon = new BitmapImage(new Uri("pack://application:,,,/Icons/candy_special_dzI_icon.ico"));
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -301,17 +422,11 @@ namespace CandyClicker
             ColorAnimation fadeToGold = new()
             {
                 From = ((SolidColorBrush)Background).Color,
-                To = new Color()
-                {
-                    R = 0xE5,
-                    G = 0xF1,
-                    B = 0x9E,
-                    A = 0xFF
-                },
+                To = new Color() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF },
                 Duration = sb.Duration
             };
             Storyboard.SetTarget(fadeToGold, windowCandyClicker);
-            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Button.Background).(SolidColorBrush.Color)"));
+            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Window.Background).(SolidColorBrush.Color)"));
             sb.Children.Add(fadeToGold);
 
             sb.Begin();
@@ -322,7 +437,7 @@ namespace CandyClicker
             isEndGameVisualActive = false;
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphEndGamePerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphCandiesPerSecond);
-            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Icons/candy_xnp_icon.ico"));
+            Icon = new BitmapImage(new Uri("pack://application:,,,/Icons/candy_xnp_icon.ico"));
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -331,17 +446,11 @@ namespace CandyClicker
             ColorAnimation fadeToGold = new()
             {
                 From = ((SolidColorBrush)Background).Color,
-                To = new Color()
-                {
-                    R = 0x86,
-                    G = 0xF1,
-                    B = 0xE6,
-                    A = 0xFF
-                },
+                To = new Color() { R = 0x86, G = 0xF1, B = 0xE6, A = 0xFF },
                 Duration = sb.Duration
             };
             Storyboard.SetTarget(fadeToGold, windowCandyClicker);
-            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Button.Background).(SolidColorBrush.Color)"));
+            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Window.Background).(SolidColorBrush.Color)"));
             sb.Children.Add(fadeToGold);
 
             sb.Begin();
@@ -396,6 +505,19 @@ namespace CandyClicker
         private void OpenCheatPopUp()
         {
             timerPerSecond.Stop();
+
+            textBoxCheatCandies.Text = CandyScore.ToString();
+            textBoxCheatPerClick.Text = CandyPerClick.ToString();
+            textBoxCheatPerSecond.Text = CandyPerSecond.ToString();
+            textBoxCheatPSMultiplier.Text = CandyPSReincarnationMultiplier.ToString();
+            textBoxCheatReincarnationCount.Text = ReincarnateCounter.ToString();
+            textBoxCheatOverflowCount.Text = OverflowCounter.ToString();
+            textBoxCheatSpecialProgress.Text = clicksTowardSpecial.ToString();
+            checkBoxCheatTaskbarHide.IsChecked = !ShowInTaskbar;
+            checkBoxCheatDisableSaveChecks.IsChecked = !doSaveIntegrityChecks;
+            checkBoxCheatDisableAutoclickerCheck.IsChecked = !doAutoClickPrevention;
+            checkBoxCheatStopCandyRain.IsChecked = !doCandyRain;
+
             gridCheat.Visibility = Visibility.Visible;
 
             Storyboard sb = new()
@@ -608,6 +730,11 @@ namespace CandyClicker
                 lastClickTime = DateTime.Now;
                 clicksThisSecond++;
 
+                if (!isSpecialActive || currentEasterEggState != EasterEggState.Normal)
+                {
+                    imageCandy.Source = easterEggImages[currentEasterEggState][rng.Next(easterEggImages[currentEasterEggState].Length)];
+                }
+
                 if (rng.Next(10) == 0)
                 {
                     Storyboard sb = new()
@@ -715,7 +842,7 @@ namespace CandyClicker
                 {
                     Image rareCandy = new()
                     {
-                        Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png")),
+                        Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png")),
                         Height = 45,
                         Width = 45,
                         Stretch = Stretch.Uniform,
@@ -931,23 +1058,53 @@ namespace CandyClicker
                 if (cheatMenuKeyProgression == cheatMenuKeys.Length)
                 {
                     cheatMenuKeyProgression = 0;
-                    textBoxCheatCandies.Text = CandyScore.ToString();
-                    textBoxCheatPerClick.Text = CandyPerClick.ToString();
-                    textBoxCheatPerSecond.Text = CandyPerSecond.ToString();
-                    textBoxCheatPSMultiplier.Text = CandyPSReincarnationMultiplier.ToString();
-                    textBoxCheatReincarnationCount.Text = ReincarnateCounter.ToString();
-                    textBoxCheatOverflowCount.Text = OverflowCounter.ToString();
-                    textBoxCheatSpecialProgress.Text = clicksTowardSpecial.ToString();
-                    checkBoxCheatTaskbarHide.IsChecked = !ShowInTaskbar;
-                    checkBoxCheatDisableSaveChecks.IsChecked = !doSaveIntegrityChecks;
-                    checkBoxCheatDisableAutoclickerCheck.IsChecked = !doAutoClickPrevention;
-                    checkBoxCheatStopCandyRain.IsChecked = !doCandyRain;
                     OpenCheatPopUp();
                 }
             }
             else
             {
                 cheatMenuKeyProgression = 0;
+            }
+
+            foreach (EasterEggState state in Enum.GetValues(typeof(EasterEggState)))
+            {
+                if (e.Key == easterEggKeys[state][easterEggKeyProgression[state]])
+                {
+                    easterEggKeyProgression[state]++;
+                    if (easterEggKeyProgression[state] == easterEggKeys[state].Length)
+                    {
+                        easterEggKeyProgression[state] = 0;
+                        currentEasterEggState = state;
+
+                        Color targetColor = state == EasterEggState.Normal && isEndGameVisualActive
+                            ? (new() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF })
+                            : easterEggBackgroundColors[state];
+
+                        imageCandy.Source = state == EasterEggState.Normal && isSpecialActive
+                            ? new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"))
+                            : easterEggImages[state][rng.Next(easterEggImages[currentEasterEggState].Length)];
+                        Storyboard sb = new()
+                        {
+                            Duration = new Duration(TimeSpan.FromSeconds(0.25))
+                        };
+
+                        ColorAnimation backgroundFade = new()
+                        {
+                            From = ((SolidColorBrush)Background).Color,
+                            To = targetColor,
+                            Duration = sb.Duration
+                        };
+                        Storyboard.SetTarget(backgroundFade, windowCandyClicker);
+                        Storyboard.SetTargetProperty(backgroundFade, new PropertyPath("(Window.Background).(SolidColorBrush.Color)"));
+                        sb.Children.Add(backgroundFade);
+
+                        sb.Begin();
+                    }
+                }
+                else
+                {
+                    easterEggKeyProgression[state] = 0;
+                }
             }
         }
 

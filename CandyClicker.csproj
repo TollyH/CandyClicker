@@ -27,12 +27,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="candy-reincarnate.png" />
-    <None Remove="candy-special.png" />
-    <None Remove="candy.png" />
-    <None Remove="candy_special_dzI_icon.ico" />
-    <None Remove="candy_xnp_icon.ico" />
-    <None Remove="mikachanALL.ttc" />
+    <None Remove="Images\candy-reincarnate.png" />
+    <None Remove="Images\candy-special.png" />
+    <None Remove="Images\candy.png" />
+    <None Remove="Icons\candy_special_dzI_icon.ico" />
+    <None Remove="Icons\candy_xnp_icon.ico" />
+    <None Remove="Images\easter-fin-1.png" />
+    <None Remove="Images\easter-fin-2.png" />
+    <None Remove="Images\easter-fin-3.png" />
+    <None Remove="Images\easter-fin-4.png" />
+    <None Remove="Images\easter-fin-5.png" />
+    <None Remove="Images\easter-riley-1.png" />
+    <None Remove="Images\easter-riley-2.png" />
+    <None Remove="Images\easter-tolly-1.png" />
+    <None Remove="Images\easter-tolly-2.png" />
+    <None Remove="Images\easter-tom-1.png" />
+    <None Remove="Images\easter-tom-2.png" />
+    <None Remove="Fonts\mikachanALL.ttc" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +53,17 @@
     <Resource Include="Icons\candy_special_dzI_icon.ico" />
     <Resource Include="Icons\candy_xnp_icon.ico" />
     <Resource Include="Fonts\mikachanALL.ttc" />
+    <Resource Include="Images\easter-fin-1.png" />
+    <Resource Include="Images\easter-fin-2.png" />
+    <Resource Include="Images\easter-fin-3.png" />
+    <Resource Include="Images\easter-fin-4.png" />
+    <Resource Include="Images\easter-fin-5.png" />
+    <Resource Include="Images\easter-riley-1.png" />
+    <Resource Include="Images\easter-riley-2.png" />
+    <Resource Include="Images\easter-tolly-1.png" />
+    <Resource Include="Images\easter-tolly-2.png" />
+    <Resource Include="Images\easter-tom-1.png" />
+    <Resource Include="Images\easter-tom-2.png" />
   </ItemGroup>
 
 </Project>

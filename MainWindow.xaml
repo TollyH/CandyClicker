@@ -22,7 +22,7 @@
             <FlowDocument x:Name="flowDocumentCandiesPerSecond">
                 <Paragraph x:Name="paragraphCandiesPerSecond" TextAlignment="Center">
                     <Run x:Name="runCandiesPerSecond" Text="0"/>
-                    <Image Source="/Images/candy.png" Height="15" RenderOptions.BitmapScalingMode="HighQuality"/><!--
+                    <Image Source="{Binding Source, ElementName=imageCandy}" Height="15" RenderOptions.BitmapScalingMode="HighQuality"/><!--
                     --><Run Text="PS"/>
                 </Paragraph>
                 <Paragraph x:Name="paragraphEndGamePerSecond" TextAlignment="Center">
