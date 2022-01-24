@@ -1,5 +1,5 @@
 ﻿<!--
-    Candy Clicker ver. 1.0.4
+    Candy Clicker ver. 1.0.5
     Copyright © 2021  Ptolemy Hill
 -->
 <Application x:Class="CandyClicker.App"
@@ -8,6 +8,6 @@
              xmlns:local="clr-namespace:CandyClicker"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <FontFamily x:Key="mikachan">pack://application:,,,/#mikachan</FontFamily>
+        <FontFamily x:Key="mikachan">pack://application:,,,/Fonts/#mikachan</FontFamily>
     </Application.Resources>
 </Application>

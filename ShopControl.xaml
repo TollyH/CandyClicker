@@ -1,5 +1,5 @@
 ﻿<!--
-    Candy Clicker ver. 1.0.4
+    Candy Clicker ver. 1.0.5
     Copyright © 2021  Ptolemy Hill
 -->
 <UserControl x:Name="userControlShopItem" x:Class="CandyClicker.ShopControl"

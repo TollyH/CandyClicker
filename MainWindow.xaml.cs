@@ -1,5 +1,5 @@
 ﻿/*
- * Candy Clicker ver. 1.0.4
+ * Candy Clicker ver. 1.0.5
  * Copyright © 2021  Ptolemy Hill
  */
 using System;
@@ -259,7 +259,7 @@ namespace CandyClicker
         {
             isSpecialActive = true;
             ImageSource regularSource = imageCandy.Source;
-            imageCandy.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy-special.png"));
+            imageCandy.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"));
             textBlockSpecial.Visibility = Visibility.Visible;
             rectangleBonusProgress.Fill = textBlockSpecial.Foreground;
 
@@ -292,7 +292,7 @@ namespace CandyClicker
             isEndGameVisualActive = true;
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphCandiesPerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphEndGamePerSecond);
-            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy_special_dzI_icon.ico"));
+            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Icons/candy_special_dzI_icon.ico"));
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -322,7 +322,7 @@ namespace CandyClicker
             isEndGameVisualActive = false;
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphEndGamePerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphCandiesPerSecond);
-            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy_xnp_icon.ico"));
+            Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Icons/candy_xnp_icon.ico"));
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -715,7 +715,7 @@ namespace CandyClicker
                 {
                     Image rareCandy = new()
                     {
-                        Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/candy-special.png")),
+                        Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png")),
                         Height = 45,
                         Width = 45,
                         Stretch = Stretch.Uniform,
