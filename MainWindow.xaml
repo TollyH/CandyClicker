@@ -119,7 +119,7 @@
                                 <Paragraph>
                                     <Run Text="Rare Candies" FontSize="20"/>
                                     <LineBreak/>
-                                    <Run Text="At random intervals, a golden candy may fall across the screen."/>
+                                    <Run Text="At random intervals, a flashing blue alert may appear above the large candy, followed shortly by a golden candy falling across the screen."/>
                                     <Image Source="/Images/candy-special.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     <LineBreak/>
                                     <Run Text="If you manage to click it before it's gone, you will be rewarded with a single burst of 500x your current candies per click value."/>

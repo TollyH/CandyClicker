@@ -68,6 +68,9 @@ namespace CandyClicker
         private byte cheatMenuKeyProgression = 0;
         // IAMALAZYCHEATER ;)
         private readonly Key[] cheatMenuKeys = new Key[15] { Key.I, Key.A, Key.M, Key.A, Key.L, Key.A, Key.Z, Key.Y, Key.C, Key.H, Key.E, Key.A, Key.T, Key.E, Key.R };
+        private byte spawnRareCandyKeyProgression = 0;
+        // EDIBLEGOLD
+        private readonly Key[] spawnRareCandyKeys = new Key[] { Key.E, Key.D, Key.I, Key.B, Key.L, Key.E, Key.G, Key.O, Key.L, Key.D };
 
         private enum EasterEggState
         {
@@ -335,6 +338,10 @@ namespace CandyClicker
 
         private void GiveCandy(ulong amount)
         {
+            if (amount == 0)
+            {
+                return;
+            }
             ulong oldCandyScore = CandyScore;
             CandyScore += amount;
             if (oldCandyScore > CandyScore)
@@ -343,6 +350,73 @@ namespace CandyClicker
                 UpdateOverflowBanner();
             }
             UpdateShopPriceColours();
+        }
+
+        private async void SpawnRareCandy()
+        {
+            Image rareCandy = new()
+            {
+                Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png")),
+                Height = 45,
+                Width = 45,
+                Stretch = Stretch.Uniform,
+                StretchDirection = StretchDirection.Both
+            };
+
+            double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)rareCandy.Width);
+            Border alert = new()
+            {
+                Child = new TextBlock()
+                {
+                    Text = "!",
+                    FontFamily = textBlockScore.FontFamily,
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = (Brush)new BrushConverter().ConvertFromString("#ebba0c"),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                },
+                Height = 30,
+                Width = 30,
+                BorderThickness = new Thickness(0),
+                Background = Brushes.Blue,
+                CornerRadius = new CornerRadius(30)
+            };
+            _ = canvasCandyRain.Children.Add(alert);
+            Canvas.SetLeft(alert, xCoord);
+            Canvas.SetTop(alert, 0);
+            for (int i = 0; i < 5; i++)
+            {
+                alert.Visibility = Visibility.Visible;
+                await Task.Delay(100);
+                alert.Visibility = Visibility.Hidden;
+                await Task.Delay(100);
+            }
+            canvasCandyRain.Children.Remove(alert);
+
+            rareCandy.MouseDown += RareCandy_MouseDown;
+            _ = canvasCandyRain.Children.Add(rareCandy);
+            Canvas.SetLeft(rareCandy, xCoord);
+            Canvas.SetTop(rareCandy, -rareCandy.Height);
+
+            Storyboard sb = new()
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(1.5))
+            };
+
+            DoubleAnimation moveDown = new()
+            {
+                From = -rareCandy.Height,
+                To = canvasCandyRain.ActualHeight,
+                Duration = sb.Duration
+            };
+            Storyboard.SetTarget(moveDown, rareCandy);
+            Storyboard.SetTargetProperty(moveDown, new PropertyPath(Canvas.TopProperty));
+            sb.Children.Add(moveDown);
+
+            sb.Completed += Rain_Completed;
+
+            sb.Begin();
         }
 
         private void UpdateRainDuration()
@@ -787,9 +861,9 @@ namespace CandyClicker
             }
         }
 
-        private async void TimerPerSecond_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void TimerPerSecond_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            await Dispatcher.Invoke(async () =>
+            Dispatcher.Invoke(() =>
             {
                 _ = gridCandyClicker.Focus();
                 if (CandyPSReincarnationMultiplier <= 1)
@@ -798,13 +872,13 @@ namespace CandyClicker
                 }
                 else
                 {
-                    if (CandyPerSecond > CandyPerSecond * CandyPSReincarnationMultiplier)
+                    if (CandyPerSecond <= CandyPerSecond * CandyPSReincarnationMultiplier)
                     {
-                        GiveCandy(ulong.MaxValue);
+                        GiveCandy(CandyPerSecond * CandyPSReincarnationMultiplier);
                     }
                     else
                     {
-                        GiveCandy(CandyPerSecond * CandyPSReincarnationMultiplier);
+                        GiveCandy(ulong.MaxValue);
                     }
                 }
                 if (!isEndGameVisualActive && CandyPSReincarnationMultiplier == ulong.MaxValue)
@@ -840,69 +914,7 @@ namespace CandyClicker
                 }
                 if (rng.Next(60) == 0)
                 {
-                    Image rareCandy = new()
-                    {
-                        Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png")),
-                        Height = 45,
-                        Width = 45,
-                        Stretch = Stretch.Uniform,
-                        StretchDirection = StretchDirection.Both
-                    };
-
-                    double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)rareCandy.Width);
-                    Border alert = new()
-                    {
-                        Child = new TextBlock()
-                        {
-                            Text = "!",
-                            FontFamily = textBlockScore.FontFamily,
-                            FontSize = 24,
-                            FontWeight = FontWeights.Bold,
-                            Foreground = (Brush)new BrushConverter().ConvertFromString("#ebba0c"),
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Center
-                        },
-                        Height = 30,
-                        Width = 30,
-                        BorderThickness = new Thickness(0),
-                        Background = Brushes.Blue,
-                        CornerRadius = new CornerRadius(30)
-                    };
-                    _ = canvasCandyRain.Children.Add(alert);
-                    Canvas.SetLeft(alert, xCoord);
-                    Canvas.SetTop(alert, 0);
-                    for (int i = 0; i < 5; i++)
-                    {
-                        alert.Visibility = Visibility.Visible;
-                        await Task.Delay(100);
-                        alert.Visibility = Visibility.Hidden;
-                        await Task.Delay(100);
-                    }
-                    canvasCandyRain.Children.Remove(alert);
-
-                    rareCandy.MouseDown += RareCandy_MouseDown;
-                    _ = canvasCandyRain.Children.Add(rareCandy);
-                    Canvas.SetLeft(rareCandy, xCoord);
-                    Canvas.SetTop(rareCandy, -rareCandy.Height);
-
-                    Storyboard sb = new()
-                    {
-                        Duration = new Duration(TimeSpan.FromSeconds(1.5))
-                    };
-
-                    DoubleAnimation moveDown = new()
-                    {
-                        From = -rareCandy.Height,
-                        To = canvasCandyRain.ActualHeight,
-                        Duration = sb.Duration
-                    };
-                    Storyboard.SetTarget(moveDown, rareCandy);
-                    Storyboard.SetTargetProperty(moveDown, new PropertyPath(Canvas.TopProperty));
-                    sb.Children.Add(moveDown);
-
-                    sb.Completed += Rain_Completed;
-
-                    sb.Begin();
+                    SpawnRareCandy();
                 }
             });
         }
@@ -1064,6 +1076,20 @@ namespace CandyClicker
             else
             {
                 cheatMenuKeyProgression = 0;
+            }
+
+            if (e.Key == spawnRareCandyKeys[spawnRareCandyKeyProgression])
+            {
+                spawnRareCandyKeyProgression++;
+                if (spawnRareCandyKeyProgression == spawnRareCandyKeys.Length)
+                {
+                    spawnRareCandyKeyProgression = 0;
+                    SpawnRareCandy();
+                }
+            }
+            else
+            {
+                spawnRareCandyKeyProgression = 0;
             }
 
             foreach (EasterEggState state in Enum.GetValues(typeof(EasterEggState)))
