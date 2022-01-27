@@ -197,7 +197,6 @@ namespace CandyClicker
         private readonly Random rng = new();
 
         private static readonly byte[] saveHeader = new byte[8] { 0x43, 0x6E, 0x64, 0x79, 0x43, 0x6C, 0x63, 0x6B };  // "CndyClck"
-        private const string reincarnationDescription = "Reincarnation allows you to restart the game with a permanent multiplier added to your candies per second. For every $CANDY_DIVISOR candies you currently have, you will get an additional multiplier on your candies per second after reincarnation. Your current candies, candies per second, candies per click, shop prices, and previous reincarnations will all be reset. You must have at least $CANDY_REQUIRE candies to reincarnate.";
 
         public MainWindow()
         {
@@ -640,12 +639,17 @@ namespace CandyClicker
             return 100000000 * (CandyPSReincarnationMultiplier + 1) * (ReincarnateCounter + 1);
         }
 
+        private ulong CalculateReincarnationResult()
+        {
+            ulong result = CandyScore / 100000000 / (ReincarnateCounter + 1);
+            return result >= CandyPSReincarnationMultiplier ? result : ulong.MaxValue;
+        }
+
         private void OpenReincarnationPopUp()
         {
             timerPerSecond.Stop();
             ulong reincarnationCost = CalculateReincarnationCost();
-            textBlockReincarnateDescription.Text = reincarnationDescription.Replace("$CANDY_DIVISOR", (100000000 * (ReincarnateCounter + 1)).ToString("N0"))
-                .Replace("$CANDY_REQUIRE", reincarnationCost.ToString("N0"));
+            textBlockReincarnateDescription.Text = $"Reincarnation allows you to restart the game with a permanent multiplier added to your candies per second. For every {100000000 * (ReincarnateCounter + 1):N0} candies you currently have, you will get an additional multiplier on your candies per second after reincarnation. Your current candies, candies per second, candies per click, shop prices, and previous reincarnations will all be reset. You must have at least {reincarnationCost:N0} candies to reincarnate.";
             if (CandyScore >= reincarnationCost)
             {
                 if (CandyPSReincarnationMultiplier == ulong.MaxValue)
@@ -659,6 +663,7 @@ namespace CandyClicker
                     buttonAgreeToReincarnate.IsEnabled = true;
                     buttonAgreeToReincarnate.Content = "Reincarnate";
                     buttonAgreeToReincarnate.Foreground = (Brush)new BrushConverter().ConvertFromString("#FFF9F9F9");
+                    textBlockReincarnateDescription.Text += $" Reincarnating now will give you a {CalculateReincarnationResult():N0}x candy per second multiplier.";
                 }
             }
             else
@@ -937,39 +942,42 @@ namespace CandyClicker
             {
                 Dispatcher.Invoke(() =>
                 {
-                    double speedModifier = rng.Next(2, 4) + rng.NextDouble();
-                    Image newRain = new()
+                    for (int i = 0; i < (Width / MinWidth); i++)
                     {
-                        Source = imageCandy.Source,
-                        Width = 43 - (speedModifier * speedModifier),
-                        Height = 43 - (speedModifier * speedModifier),
-                        Stretch = Stretch.Uniform,
-                        StretchDirection = StretchDirection.Both,
-                        Opacity = 0.5
-                    };
-                    _ = canvasCandyRain.Children.Add(newRain);
-                    double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)newRain.Width);
-                    Canvas.SetLeft(newRain, xCoord);
-                    Canvas.SetTop(newRain, -newRain.Height);
+                        double speedModifier = rng.Next(2, 4) + rng.NextDouble();
+                        Image newRain = new()
+                        {
+                            Source = imageCandy.Source,
+                            Width = 43 - (speedModifier * speedModifier),
+                            Height = 43 - (speedModifier * speedModifier),
+                            Stretch = Stretch.Uniform,
+                            StretchDirection = StretchDirection.Both,
+                            Opacity = 0.5
+                        };
+                        _ = canvasCandyRain.Children.Add(newRain);
+                        double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)newRain.Width);
+                        Canvas.SetLeft(newRain, xCoord);
+                        Canvas.SetTop(newRain, -newRain.Height);
 
-                    Storyboard sb = new()
-                    {
-                        Duration = new Duration(TimeSpan.FromSeconds(speedModifier))
-                    };
+                        Storyboard sb = new()
+                        {
+                            Duration = new Duration(TimeSpan.FromSeconds(speedModifier))
+                        };
 
-                    DoubleAnimation moveDown = new()
-                    {
-                        From = -newRain.Height,
-                        To = canvasCandyRain.ActualHeight,
-                        Duration = sb.Duration
-                    };
-                    Storyboard.SetTarget(moveDown, newRain);
-                    Storyboard.SetTargetProperty(moveDown, new PropertyPath(Canvas.TopProperty));
-                    sb.Children.Add(moveDown);
+                        DoubleAnimation moveDown = new()
+                        {
+                            From = -newRain.Height,
+                            To = canvasCandyRain.ActualHeight,
+                            Duration = sb.Duration
+                        };
+                        Storyboard.SetTarget(moveDown, newRain);
+                        Storyboard.SetTargetProperty(moveDown, new PropertyPath(Canvas.TopProperty));
+                        sb.Children.Add(moveDown);
 
-                    sb.Completed += Rain_Completed;
+                        sb.Completed += Rain_Completed;
 
-                    sb.Begin();
+                        sb.Begin();
+                    }
                 });
             }
         }
@@ -1010,10 +1018,8 @@ namespace CandyClicker
         {
             if (CandyScore >= CalculateReincarnationCost())
             {
+                CandyPSReincarnationMultiplier = CalculateReincarnationResult();
                 ReincarnateCounter++;
-                CandyPSReincarnationMultiplier = CandyScore / 100000000 / ReincarnateCounter < CandyPSReincarnationMultiplier
-                    ? ulong.MaxValue
-                    : CandyScore / 100000000 / ReincarnateCounter;
                 CandyScore = 0;
                 CandyPerSecond = 0;
                 UpdateRainDuration();
