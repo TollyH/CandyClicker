@@ -56,7 +56,14 @@ namespace CandyClicker
         public ulong ReincarnateCounter { get; set; }
         public ulong OverflowCounter { get; set; }
 
+        public bool HasBeenCustomised { get; private set; }
+
+        private Color customBackground;
+        private Color customForeground;
+        private string customImagePath;
+
         private readonly string savePath = AppDomain.CurrentDomain.BaseDirectory + @"\save_data.dat";
+        private readonly string customisationPath = AppDomain.CurrentDomain.BaseDirectory + @"\customisation_data.dat";
 
         private uint clicksTowardSpecial = 0;
         private bool isSpecialActive = false;
@@ -65,10 +72,10 @@ namespace CandyClicker
         private bool doSaveIntegrityChecks = true;
         private bool doAutoClickPrevention = true;
         private bool doCandyRain = true;
-        private byte cheatMenuKeyProgression = 0;
+        private uint cheatMenuKeyProgression = 0;
         // IAMALAZYCHEATER ;)
         private readonly Key[] cheatMenuKeys = new Key[15] { Key.I, Key.A, Key.M, Key.A, Key.L, Key.A, Key.Z, Key.Y, Key.C, Key.H, Key.E, Key.A, Key.T, Key.E, Key.R };
-        private byte spawnRareCandyKeyProgression = 0;
+        private uint spawnRareCandyKeyProgression = 0;
         // EDIBLEGOLD
         private readonly Key[] spawnRareCandyKeys = new Key[] { Key.E, Key.D, Key.I, Key.B, Key.L, Key.E, Key.G, Key.O, Key.L, Key.D };
 
@@ -191,6 +198,9 @@ namespace CandyClicker
         private int clicksThisSecond = 0;
         private readonly List<int> previousClicksPerSecond = new();
 
+        // Used for opening customisations menu
+        private int rightClicksInRow = 0;
+
         private readonly System.Timers.Timer timerPerSecond = new(1000);
         private readonly System.Timers.Timer timerCandyPerSecond = new(50);
         private readonly System.Timers.Timer timerCandyRain = new();
@@ -212,6 +222,7 @@ namespace CandyClicker
 
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphEndGamePerSecond);
 
+            LoadCustomisations();
             LoadSaveData();
             ReloadShop();
             UpdateOverflowBanner();
@@ -228,6 +239,102 @@ namespace CandyClicker
 
             timerAutoSave.Elapsed += TimerAutoSave_Elapsed;
             timerAutoSave.Start();
+        }
+
+        public void SetCustomisations(Color? backgroundColor = null, Color? foregroundColor = null, string imageFilePath = null)
+        {
+            HasBeenCustomised = true;
+            if (backgroundColor != null)
+            {
+                customBackground = backgroundColor.Value;
+                FadeBackgroundColor(backgroundColor.Value);
+            }
+            if (foregroundColor != null)
+            {
+                customForeground = foregroundColor.Value;
+                Application.Current.Resources["MainForeground"] = new SolidColorBrush(foregroundColor.Value);
+                Application.Current.Resources["DarkForeground"] = new SolidColorBrush(
+                    new Color() { A = 255, R = (byte)(foregroundColor.Value.R / 2), G = (byte)(foregroundColor.Value.G / 2), B = (byte)(foregroundColor.Value.B / 2) }
+                );
+                Application.Current.Resources["SecondaryForeground"] = (foregroundColor.Value.R + foregroundColor.Value.G + foregroundColor.Value.B) / 3 < 127 ?
+                    Brushes.White : Brushes.Black;
+                Application.Current.Resources["DialogBackground"] = new SolidColorBrush(backgroundColor.Value);
+            }
+            if (imageFilePath != null)
+            {
+                customImagePath = imageFilePath;
+                imageCandy.Source = new BitmapImage(new Uri(imageFilePath));
+            }
+            SaveCustomisations();
+        }
+
+        public void ResetCustomisations()
+        {
+            HasBeenCustomised = false;
+            File.Delete(customisationPath);
+            FadeBackgroundColor(new Color() { R = 0x86, G = 0xFF, B = 0xFA, A = 0xFF });
+            Application.Current.Resources["MainForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0x41, B = 0x41, A = 0xFF });
+            Application.Current.Resources["DarkForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0xC7, B = 0x23, A = 0x23 });
+            Application.Current.Resources["SecondaryForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0xFF, B = 0xFF, A = 0xFF });
+            Application.Current.Resources["DialogBackground"] = new SolidColorBrush(new Color() { R = 0xF1, G = 0xF1, B = 0xF1, A = 0xFF });
+            customImagePath = null;
+            imageCandy.Source = new BitmapImage(new Uri(isSpecialActive ? "pack://application:,,,/Images/candy-special.png" : "pack://application:,,,/Images/candy.png"));
+        }
+
+        public (Color, Color, string) GetCustomisations()
+        {
+            return (((SolidColorBrush)Background).Color, ((SolidColorBrush)Application.Current.Resources["MainForeground"]).Color, customImagePath);
+        }
+
+        private void LoadCustomisations()
+        {
+            if (File.Exists(customisationPath))
+            {
+                try
+                {
+                    Color backgroundColor = new() { A = 0xFF };
+                    Color foregroundColor = new() { A = 0xFF };
+                    byte[] customisationBytes = File.ReadAllBytes(customisationPath);
+                    backgroundColor.R = customisationBytes[0];
+                    backgroundColor.G = customisationBytes[1];
+                    backgroundColor.B = customisationBytes[2];
+                    foregroundColor.R = customisationBytes[3];
+                    foregroundColor.G = customisationBytes[4];
+                    foregroundColor.B = customisationBytes[5];
+                    string imageFilePath = null;
+                    if (customisationBytes.Length > 6)
+                    {
+                        imageFilePath = System.Text.Encoding.UTF8.GetString(customisationBytes[6..]);
+                        customImagePath = imageFilePath;
+                    }
+                    SetCustomisations(backgroundColor, foregroundColor, imageFilePath);
+                }
+                catch
+                {
+                    _ = MessageBox.Show("Corrupt customisations file detected. One possible cause of this is an invalid image file path, has it been deleted?", "Customisations error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+            }
+        }
+
+        private void SaveCustomisations()
+        {
+            if (!HasBeenCustomised)
+            {
+                return;
+            }
+            List<byte> customisationBytes = new();
+            customisationBytes.Add(customBackground.R);
+            customisationBytes.Add(customBackground.G);
+            customisationBytes.Add(customBackground.B);
+            customisationBytes.Add(customForeground.R);
+            customisationBytes.Add(customForeground.G);
+            customisationBytes.Add(customForeground.B);
+            if (customImagePath != null)
+            {
+                customisationBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(customImagePath));
+            }
+            File.WriteAllBytes(customisationPath, customisationBytes.ToArray());
         }
 
         private void LoadSaveData()
@@ -247,7 +354,7 @@ namespace CandyClicker
                     using MD5 md5 = MD5.Create();
                     if (!md5.ComputeHash(saveBytes[..^16]).SequenceEqual(hashBytes) && doSaveIntegrityChecks)
                     {
-                        _ = MessageBox.Show("Modified save file detected", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _ = MessageBox.Show("Modified or corrupt save file detected", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                         Environment.Exit(1);
                     }
 
@@ -454,7 +561,7 @@ namespace CandyClicker
         {
             isSpecialActive = true;
             ImageSource regularSource = new BitmapImage(new Uri("pack://application:,,,/Images/candy.png"));
-            if (currentEasterEggState == EasterEggState.Normal)
+            if (currentEasterEggState == EasterEggState.Normal && !HasBeenCustomised)
             {
                 imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"));
             }
@@ -480,7 +587,7 @@ namespace CandyClicker
 
             rectangleBonusProgress.Fill = textBlockScore.Foreground;
             textBlockSpecial.Visibility = Visibility.Hidden;
-            if (currentEasterEggState == EasterEggState.Normal)
+            if (currentEasterEggState == EasterEggState.Normal && !HasBeenCustomised)
             {
                 imageCandy.Source = regularSource;
                 SeasonThemeCheck();
@@ -515,7 +622,10 @@ namespace CandyClicker
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphCandiesPerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphEndGamePerSecond);
             Icon = new BitmapImage(new Uri("pack://application:,,,/Icons/candy_special_dzI_icon.ico"));
-            FadeBackgroundColor(new Color() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF });
+            if (!HasBeenCustomised)
+            {
+                FadeBackgroundColor(new Color() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF });
+            }
         }
 
         private void UndoEndGameVisualUpdate()
@@ -524,12 +634,19 @@ namespace CandyClicker
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphEndGamePerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphCandiesPerSecond);
             Icon = new BitmapImage(new Uri("pack://application:,,,/Icons/candy_xnp_icon.ico"));
-            FadeBackgroundColor(new Color() { R = 0x86, G = 0xF1, B = 0xE6, A = 0xFF });
-            SeasonThemeCheck();
+            if (!HasBeenCustomised)
+            {
+                FadeBackgroundColor(new Color() { R = 0x86, G = 0xF1, B = 0xE6, A = 0xFF });
+                SeasonThemeCheck();
+            }
         }
 
         private void SeasonThemeCheck()
         {
+            if (HasBeenCustomised)
+            {
+                return;
+            }
             DateTime now = DateTime.Now;
             // Christmas
             if (now.Month == 12 || (now.Month == 1 && now.Day <= 6))
@@ -832,7 +949,9 @@ namespace CandyClicker
                 lastClickTime = DateTime.Now;
                 clicksThisSecond++;
 
-                if (!isSpecialActive || currentEasterEggState != EasterEggState.Normal)
+                rightClicksInRow = 0;
+
+                if (!HasBeenCustomised && (!isSpecialActive || currentEasterEggState != EasterEggState.Normal))
                 {
                     imageCandy.Source = easterEggImages[currentEasterEggState][rng.Next(easterEggImages[currentEasterEggState].Length)];
                     if (currentEasterEggState == EasterEggState.Normal)
@@ -889,6 +1008,15 @@ namespace CandyClicker
                     sb.Children.Add(growX);
 
                     sb.Begin();
+                }
+            }
+            else if (e.ChangedButton == MouseButton.Right && !OwnedWindows.OfType<CustomiseWindow>().Any() && currentEasterEggState == EasterEggState.Normal)
+            {
+                rightClicksInRow++;
+                if (rightClicksInRow >= 5)
+                {
+                    rightClicksInRow = 0;
+                    new CustomiseWindow(this).Show();
                 }
             }
         }
@@ -1142,33 +1270,36 @@ namespace CandyClicker
                 spawnRareCandyKeyProgression = 0;
             }
 
-            foreach (EasterEggState state in Enum.GetValues(typeof(EasterEggState)))
+            if (!HasBeenCustomised)
             {
-                if (e.Key == easterEggKeys[state][easterEggKeyProgression[state]])
+                foreach (EasterEggState state in Enum.GetValues(typeof(EasterEggState)))
                 {
-                    easterEggKeyProgression[state]++;
-                    if (easterEggKeyProgression[state] == easterEggKeys[state].Length)
+                    if (e.Key == easterEggKeys[state][easterEggKeyProgression[state]])
                     {
-                        easterEggKeyProgression[state] = 0;
-                        currentEasterEggState = state;
-
-                        Color targetColor = state == EasterEggState.Normal && isEndGameVisualActive
-                            ? (new() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF })
-                            : easterEggBackgroundColors[state];
-
-                        imageCandy.Source = state == EasterEggState.Normal && isSpecialActive
-                            ? new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"))
-                            : easterEggImages[state][rng.Next(easterEggImages[currentEasterEggState].Length)];
-                        FadeBackgroundColor(targetColor);
-                        if (state == EasterEggState.Normal)
+                        easterEggKeyProgression[state]++;
+                        if (easterEggKeyProgression[state] == easterEggKeys[state].Length)
                         {
-                            SeasonThemeCheck();
+                            easterEggKeyProgression[state] = 0;
+                            currentEasterEggState = state;
+
+                            Color targetColor = state == EasterEggState.Normal && isEndGameVisualActive
+                                ? (new() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF })
+                                : easterEggBackgroundColors[state];
+
+                            imageCandy.Source = state == EasterEggState.Normal && isSpecialActive
+                                ? new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"))
+                                : easterEggImages[state][rng.Next(easterEggImages[currentEasterEggState].Length)];
+                            FadeBackgroundColor(targetColor);
+                            if (state == EasterEggState.Normal)
+                            {
+                                SeasonThemeCheck();
+                            }
                         }
                     }
-                }
-                else
-                {
-                    easterEggKeyProgression[state] = 0;
+                    else
+                    {
+                        easterEggKeyProgression[state] = 0;
+                    }
                 }
             }
         }

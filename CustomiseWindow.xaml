@@ -1,0 +1,55 @@
+﻿<Window x:Class="CandyClicker.CustomiseWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CandyClicker"
+        mc:Ignorable="d"
+        Title="Customisation" MinWidth="330" Height="850" Width="330">
+    <ScrollViewer>
+        <StackPanel>
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="5">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="Background" FontWeight="Bold" FontSize="14"/>
+                    <TextBlock x:Name="textBlockBackgroundRed" Margin="5" Text="Red (0)"/>
+                    <Slider x:Name="sliderBackgroundRed" Margin="5" MinWidth="255" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Interval="1" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock x:Name="textBlockBackgroundGreen" Margin="5" Text="Green (0)"/>
+                    <Slider x:Name="sliderBackgroundGreen" Margin="5" MinWidth="255" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Interval="1" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock x:Name="textBlockBackgroundBlue" Margin="5" Text="Blue (0)"/>
+                    <Slider x:Name="sliderBackgroundBlue" Margin="5" MinWidth="255" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Interval="1" ValueChanged="Slider_ValueChanged"/>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="5">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="Foreground" FontWeight="Bold" FontSize="14"/>
+                    <TextBlock x:Name="textBlockForegroundRed" Margin="5" Text="Red (0)"/>
+                    <Slider x:Name="sliderForegroundRed" Margin="5" MinWidth="255" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Interval="1" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock x:Name="textBlockForegroundGreen" Margin="5" Text="Green (0)"/>
+                    <Slider x:Name="sliderForegroundGreen" Margin="5" MinWidth="255" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Interval="1" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock x:Name="textBlockForegroundBlue" Margin="5" Text="Blue (0)"/>
+                    <Slider x:Name="sliderForegroundBlue" Margin="5" MinWidth="255" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Interval="1" ValueChanged="Slider_ValueChanged"/>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="5">
+                <Grid>
+                    <TextBlock Margin="5" Text="Image" FontWeight="Bold" FontSize="14"/>
+                    <TextBlock x:Name="textBlockImagePath" Margin="5,30,5,5" Text="(Default)" Foreground="DimGray"/>
+                    <Button x:Name="buttonImageChange" Content="Open" VerticalAlignment="Bottom" Padding="8,1,8,1" HorizontalAlignment="Right" Margin="0,0,5,5" Click="ButtonImageChange_Click"/>
+                </Grid>
+            </Border>
+            <StackPanel x:Name="stackPanelPreview" Margin="5" Background="Black">
+                <TextBlock x:Name="textBlockPreview" Margin="5" Foreground="White" Text="Mouse Buttons&#x0a;Left: Pulse  Right: Spin" FontSize="20" TextAlignment="Center" FontFamily="{StaticResource mikachan}" FontWeight="Bold" TextWrapping="Wrap"/>
+                <Image x:Name="imagePreview" Margin="0,47,0,47" Source="/Images/candy.png" Width="172" Height="125" HorizontalAlignment="Center" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" MouseDown="ImagePreview_MouseDown" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TransformGroup x:Name="transformGroupCandy">
+                            <RotateTransform x:Name="rotateTransformCandy"/>
+                            <ScaleTransform x:Name="scaleTransformCandy" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </StackPanel>
+            <Button x:Name="buttonSave" Content="Save" Margin="5" Click="ButtonSave_Click"/>
+            <Button x:Name="buttonReset" Content="Reset" Margin="5" Click="ButtonReset_Click"/>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

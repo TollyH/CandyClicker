@@ -37,11 +37,11 @@
             <Image Source="/Images/candy-reincarnate.png" RenderOptions.BitmapScalingMode="HighQuality"/>
         </Button>
         <Button x:Name="buttonHelp" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="1" Height="35" Width="35" Background="#19000000" BorderBrush="#3F000000" Click="ButtonHelp_Click" Content="?" FontFamily="{StaticResource mikachan}" FontSize="24" FontWeight="Bold" Foreground="#FF1A38DE"/>
-        <Image x:Name="imageCandy" Source="/Images/candy.png" VerticalAlignment="Top" HorizontalAlignment="Center" Width="172" Height="125" Margin="0,167,0,0" MouseDown="ImageCandy_MouseDown" RenderOptions.BitmapScalingMode="HighQuality">
+        <Image x:Name="imageCandy" Source="/Images/candy.png" VerticalAlignment="Top" HorizontalAlignment="Center" Width="172" Height="125" Margin="0,167,0,0" MouseDown="ImageCandy_MouseDown" RenderOptions.BitmapScalingMode="HighQuality" RenderTransformOrigin="0.5,0.5">
             <Image.RenderTransform>
                 <TransformGroup x:Name="transformGroupCandy">
-                    <RotateTransform x:Name="rotateTransformCandy" CenterX="86" CenterY="62.5"/>
-                    <ScaleTransform x:Name="scaleTransformCandy" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}" CenterX="86" CenterY="62.5"/>
+                    <RotateTransform x:Name="rotateTransformCandy"/>
+                    <ScaleTransform x:Name="scaleTransformCandy" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
@@ -52,52 +52,52 @@
         </ScrollViewer>
         <TextBlock x:Name="textBlockOverflow" Text="" VerticalAlignment="Top" Margin="10,336,10,0" FontSize="16" FontWeight="Bold" Foreground="#ebba0c" FontFamily="{StaticResource mikachan}"/>
         <Grid x:Name="gridReincarnate" Background="#BF000000" Visibility="Collapsed">
-            <Border Margin="25" BorderBrush="{DynamicResource MainForeground}" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+            <Border Margin="25" BorderBrush="{DynamicResource MainForeground}" BorderThickness="5" CornerRadius="10" Background="{DynamicResource DialogBackground}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
                     <StackPanel>
                         <TextBlock Margin="10,10,10,0" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Reincarnation" FontWeight="Bold" TextAlignment="Center"/>
                         <TextBlock x:Name="textBlockReincarnateDescription" Margin="10,5,10,10" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold"/>
-                        <Button x:Name="buttonAgreeToReincarnate" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="Reincarnate" FontFamily="{StaticResource mikachan}" FontSize="22" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,5,1,5" Click="ButtonAgreeToReincarnate_Click"/>
+                        <Button x:Name="buttonAgreeToReincarnate" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="Reincarnate" FontFamily="{StaticResource mikachan}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource SecondaryForeground}" Padding="1,5,1,5" Click="ButtonAgreeToReincarnate_Click"/>
                         <TextBlock x:Name="textBlockCancelReincarnate" VerticalAlignment="Bottom" Text="Nevermind" Margin="10,0,10,10" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}" TextAlignment="Center" FontSize="16" Background="#00000000" MouseDown="TextBlockCancelReincarnate_MouseDown" FontWeight="Bold"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
         </Grid>
         <Grid x:Name="gridCheat" Background="#BF000000" Visibility="Collapsed">
-            <Border Margin="25" BorderBrush="{DynamicResource MainForeground}" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+            <Border Margin="25" BorderBrush="{DynamicResource MainForeground}" BorderThickness="5" CornerRadius="10" Background="{DynamicResource DialogBackground}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
                     <StackPanel>
                         <TextBlock Margin="10,10,10,0" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Cheat Menu" FontWeight="Bold" TextAlignment="Center"/>
-                        <Button x:Name="buttonCloseCheat" Background="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,1,1,1" Click="ButtonCloseCheat_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>
+                        <Button x:Name="buttonCloseCheat" Background="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource SecondaryForeground}" Padding="1,1,1,1" Click="ButtonCloseCheat_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Total Candies"/>
-                        <TextBox x:Name="textBoxCheatCandies" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16"/>
+                        <TextBox x:Name="textBoxCheatCandies" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Candies Per Click"/>
-                        <TextBox x:Name="textBoxCheatPerClick" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16"/>
+                        <TextBox x:Name="textBoxCheatPerClick" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Candies Per Second"/>
-                        <TextBox x:Name="textBoxCheatPerSecond" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16"/>
+                        <TextBox x:Name="textBoxCheatPerSecond" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Reincarnation Multiplier"/>
-                        <TextBox x:Name="textBoxCheatPSMultiplier" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16"/>
+                        <TextBox x:Name="textBoxCheatPSMultiplier" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Reincarnation Count"/>
-                        <TextBox x:Name="textBoxCheatReincarnationCount" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16"/>
+                        <TextBox x:Name="textBoxCheatReincarnationCount" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Overflow Count"/>
-                        <TextBox x:Name="textBoxCheatOverflowCount" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16"/>
+                        <TextBox x:Name="textBoxCheatOverflowCount" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Candy Meter Progression (0-999)"/>
-                        <TextBox x:Name="textBoxCheatSpecialProgress" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16"/>
-                        <CheckBox x:Name="checkBoxCheatTaskbarHide" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="Hide In Taskbar" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
-                        <CheckBox x:Name="checkBoxCheatDisableSaveChecks" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="Disable Save Integrity" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
-                        <CheckBox x:Name="checkBoxCheatDisableAutoclickerCheck" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="Allow Autoclickers" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
-                        <CheckBox x:Name="checkBoxCheatStopCandyRain" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="Stop Candy Rain" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
-                        <Button x:Name="buttonCommitCheat" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="Save Changes" FontFamily="{StaticResource mikachan}" FontSize="22" FontWeight="Bold" Foreground="#FFFFFFFF" Padding="1,5,1,5" Click="ButtonCommitCheat_Click"/>
+                        <TextBox x:Name="textBoxCheatSpecialProgress" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
+                        <CheckBox x:Name="checkBoxCheatTaskbarHide" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="Hide In Taskbar" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <CheckBox x:Name="checkBoxCheatDisableSaveChecks" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="Disable Save Integrity" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <CheckBox x:Name="checkBoxCheatDisableAutoclickerCheck" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="Allow Autoclickers" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <CheckBox x:Name="checkBoxCheatStopCandyRain" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="Stop Candy Rain" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
+                        <Button x:Name="buttonCommitCheat" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="Save Changes" FontFamily="{StaticResource mikachan}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource SecondaryForeground}" Padding="1,5,1,5" Click="ButtonCommitCheat_Click"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
         </Grid>
         <Grid x:Name="gridHelp" Background="#BF000000" Visibility="Collapsed">
-            <Border Margin="25" BorderBrush="{DynamicResource MainForeground}" BorderThickness="5" CornerRadius="10" Background="#FFF1F1F1">
+            <Border Margin="25" BorderBrush="{DynamicResource MainForeground}" BorderThickness="5" CornerRadius="10" Background="{DynamicResource DialogBackground}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
                     <StackPanel>
                         <TextBlock Margin="10,10,10,0" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="24" Text="Help" FontWeight="Bold" TextAlignment="Center"/>
-                        <Button x:Name="buttonCloseHelp" Background="{DynamicResource MainForeground}" BorderBrush="#FFC72323" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="#FFF9F9F9" Padding="1,1,1,1" Click="ButtonCloseHelp_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>
+                        <Button x:Name="buttonCloseHelp" Background="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="X" FontFamily="{StaticResource mikachan}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource SecondaryForeground}" Padding="1,1,1,1" Click="ButtonCloseHelp_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Margin="0,-30,10,0"/>
                         <RichTextBox x:Name="textBlockHelpDescription" Margin="10,5,10,10" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalScrollBarVisibility="Auto" BorderThickness="0,0,0,0" IsReadOnly="True" IsUndoEnabled="False" AutoWordSelection="False" AcceptsReturn="False">
                             <FlowDocument>
                                 <Paragraph>

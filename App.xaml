@@ -9,6 +9,9 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <SolidColorBrush x:Key="MainForeground" Color="#FFFF4141"/>
+        <SolidColorBrush x:Key="SecondaryForeground" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="DarkForeground" Color="#FFC72323"/>
+        <SolidColorBrush x:Key="DialogBackground" Color="#FFF1F1F1"/>
         <FontFamily x:Key="mikachan">pack://application:,,,/Fonts/#mikachan</FontFamily>
     </Application.Resources>
 </Application>
