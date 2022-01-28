@@ -12,6 +12,7 @@
         Title="Candy Clicker" Width="360" Height="565" MinHeight="415" MinWidth="360" Icon="/Icons/candy_xnp_icon.ico" Closing="WindowCandyClicker_Closing" Background="#FF86FFFA" SizeChanged="WindowCandyClicker_SizeChanged">
     <Grid x:Name="gridCandyClicker" KeyDown="GridCandyClicker_KeyDown" Focusable="True">
         <Canvas x:Name="canvasCandyRain" Height="250" VerticalAlignment="Top" Margin="0,105,0,0" ClipToBounds="True"/>
+        <Canvas x:Name="canvasRareCandy" Height="250" VerticalAlignment="Top" Margin="0,105,0,0" ClipToBounds="True"/>
         <TextBlock x:Name="textBlockScore" Text="{Binding CandyScore, ElementName=windowCandyClicker, FallbackValue=X\,XXX\,XXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" FontSize="36" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}"/>
         <TextBlock x:Name="textBlockPerClick" Text="{Binding CandyPerClick, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/c, StringFormat=+\{0:N0\}/c, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,50,5,5" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}"/>
         <TextBlock x:Name="textBlockSpecial" Text="(x10/c)" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,73,0,0" FontSize="18" FontWeight="Bold" Foreground="#ebba0c" FontFamily="{StaticResource mikachan}" TextAlignment="Center" Visibility="Hidden"/>

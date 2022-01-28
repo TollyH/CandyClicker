@@ -215,6 +215,7 @@ namespace CandyClicker
             LoadSaveData();
             ReloadShop();
             UpdateOverflowBanner();
+            SeasonThemeCheck();
 
             timerPerSecond.Elapsed += TimerPerSecond_Elapsed;
             timerPerSecond.Start();
@@ -387,7 +388,7 @@ namespace CandyClicker
                 Background = Brushes.Blue,
                 CornerRadius = new CornerRadius(30)
             };
-            _ = canvasCandyRain.Children.Add(alert);
+            _ = canvasRareCandy.Children.Add(alert);
             Canvas.SetLeft(alert, xCoord);
             Canvas.SetTop(alert, 0);
             for (int i = 0; i < 5; i++)
@@ -397,10 +398,10 @@ namespace CandyClicker
                 alert.Visibility = Visibility.Hidden;
                 await Task.Delay(100);
             }
-            canvasCandyRain.Children.Remove(alert);
+            canvasRareCandy.Children.Remove(alert);
 
             rareCandy.MouseDown += RareCandy_MouseDown;
-            _ = canvasCandyRain.Children.Add(rareCandy);
+            _ = canvasRareCandy.Children.Add(rareCandy);
             Canvas.SetLeft(rareCandy, xCoord);
             Canvas.SetTop(rareCandy, -rareCandy.Height);
 
@@ -419,7 +420,7 @@ namespace CandyClicker
             Storyboard.SetTargetProperty(moveDown, new PropertyPath(Canvas.TopProperty));
             sb.Children.Add(moveDown);
 
-            sb.Completed += Rain_Completed;
+            sb.Completed += RareCandy_Completed;
 
             sb.Begin();
         }
@@ -482,9 +483,30 @@ namespace CandyClicker
             if (currentEasterEggState == EasterEggState.Normal)
             {
                 imageCandy.Source = regularSource;
+                SeasonThemeCheck();
             }
             clicksTowardSpecial = 0;
             isSpecialActive = false;
+        }
+
+        private void FadeBackgroundColor(Color targetColor)
+        {
+            Storyboard sb = new()
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.25))
+            };
+
+            ColorAnimation fade = new()
+            {
+                From = ((SolidColorBrush)Background).Color,
+                To = targetColor,
+                Duration = sb.Duration
+            };
+            Storyboard.SetTarget(fade, windowCandyClicker);
+            Storyboard.SetTargetProperty(fade, new PropertyPath("(Window.Background).(SolidColorBrush.Color)"));
+            sb.Children.Add(fade);
+
+            sb.Begin();
         }
 
         private void EndGameVisualUpdate()
@@ -493,22 +515,7 @@ namespace CandyClicker
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphCandiesPerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphEndGamePerSecond);
             Icon = new BitmapImage(new Uri("pack://application:,,,/Icons/candy_special_dzI_icon.ico"));
-            Storyboard sb = new()
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.25))
-            };
-
-            ColorAnimation fadeToGold = new()
-            {
-                From = ((SolidColorBrush)Background).Color,
-                To = new Color() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF },
-                Duration = sb.Duration
-            };
-            Storyboard.SetTarget(fadeToGold, windowCandyClicker);
-            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Window.Background).(SolidColorBrush.Color)"));
-            sb.Children.Add(fadeToGold);
-
-            sb.Begin();
+            FadeBackgroundColor(new Color() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF });
         }
 
         private void UndoEndGameVisualUpdate()
@@ -517,22 +524,26 @@ namespace CandyClicker
             _ = flowDocumentCandiesPerSecond.Blocks.Remove(paragraphEndGamePerSecond);
             flowDocumentCandiesPerSecond.Blocks.Add(paragraphCandiesPerSecond);
             Icon = new BitmapImage(new Uri("pack://application:,,,/Icons/candy_xnp_icon.ico"));
-            Storyboard sb = new()
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.25))
-            };
+            FadeBackgroundColor(new Color() { R = 0x86, G = 0xF1, B = 0xE6, A = 0xFF });
+            SeasonThemeCheck();
+        }
 
-            ColorAnimation fadeToGold = new()
+        private void SeasonThemeCheck()
+        {
+            DateTime now = DateTime.Now;
+            // Christmas
+            if (now.Month == 12 || (now.Month == 1 && now.Day <= 6))
             {
-                From = ((SolidColorBrush)Background).Color,
-                To = new Color() { R = 0x86, G = 0xF1, B = 0xE6, A = 0xFF },
-                Duration = sb.Duration
-            };
-            Storyboard.SetTarget(fadeToGold, windowCandyClicker);
-            Storyboard.SetTargetProperty(fadeToGold, new PropertyPath("(Window.Background).(SolidColorBrush.Color)"));
-            sb.Children.Add(fadeToGold);
-
-            sb.Begin();
+                imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-season-christmas.png"));
+                FadeBackgroundColor(new Color() { R = 0x64, G = 0xF5, B = 0x5F, A = 0xFF });
+            }
+            // Halloween
+            else if (now.Month == 10)
+            {
+                imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-season-halloween.png"));
+                Application.Current.Resources["MainForeground"] = Brushes.OrangeRed;
+                FadeBackgroundColor(new Color() { R = 0x26, G = 0x06, B = 0x61, A = 0xFF });
+            }
         }
 
         private void OpenHelpPopUp()
@@ -818,6 +829,10 @@ namespace CandyClicker
                 if (!isSpecialActive || currentEasterEggState != EasterEggState.Normal)
                 {
                     imageCandy.Source = easterEggImages[currentEasterEggState][rng.Next(easterEggImages[currentEasterEggState].Length)];
+                    if (currentEasterEggState == EasterEggState.Normal)
+                    {
+                        SeasonThemeCheck();
+                    }
                 }
 
                 if (rng.Next(10) == 0)
@@ -1008,6 +1023,14 @@ namespace CandyClicker
             Dispatcher.Invoke(() => canvasCandyRain.Children.Remove(completed));
         }
 
+        private void RareCandy_Completed(object sender, EventArgs e)
+        {
+            Image completed = (Image)Storyboard.GetTarget(((ClockGroup)sender).Children[0].Timeline);
+            completed.BeginAnimation(Canvas.TopProperty, null);
+            completed.Source = null;
+            Dispatcher.Invoke(() => canvasRareCandy.Children.Remove(completed));
+        }
+
         private void TimerAutoSave_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() => SaveData());
@@ -1133,22 +1156,11 @@ namespace CandyClicker
                         imageCandy.Source = state == EasterEggState.Normal && isSpecialActive
                             ? new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"))
                             : easterEggImages[state][rng.Next(easterEggImages[currentEasterEggState].Length)];
-                        Storyboard sb = new()
+                        FadeBackgroundColor(targetColor);
+                        if (state == EasterEggState.Normal)
                         {
-                            Duration = new Duration(TimeSpan.FromSeconds(0.25))
-                        };
-
-                        ColorAnimation backgroundFade = new()
-                        {
-                            From = ((SolidColorBrush)Background).Color,
-                            To = targetColor,
-                            Duration = sb.Duration
-                        };
-                        Storyboard.SetTarget(backgroundFade, windowCandyClicker);
-                        Storyboard.SetTargetProperty(backgroundFade, new PropertyPath("(Window.Background).(SolidColorBrush.Color)"));
-                        sb.Children.Add(backgroundFade);
-
-                        sb.Begin();
+                            SeasonThemeCheck();
+                        }
                     }
                 }
                 else
