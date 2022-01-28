@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:CandyClicker"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <SolidColorBrush x:Key="MainForeground" Color="#FFFF4141"/>
         <FontFamily x:Key="mikachan">pack://application:,,,/Fonts/#mikachan</FontFamily>
     </Application.Resources>
 </Application>

@@ -18,8 +18,8 @@
                 <GradientStop Color="#33525252" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <TextBlock x:Name="textBlockName" Text="{Binding ShopItemName, ElementName=userControlShopItem, FallbackValue=XXXXXXXXXXXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold" Foreground="#FFFF4141" Margin="5,0,0,0" FontFamily="{StaticResource mikachan}"/>
-        <TextBlock x:Name="textBlockPrice" Text="{Binding ShopItemPrice, ElementName=userControlShopItem, FallbackValue=(X\,XXX\,XXX), StringFormat=(\{0:N0\}), TargetNullValue=0}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="18" FontWeight="Bold" Foreground="{Binding PriceForeground, ElementName=userControlShopItem, FallbackValue=#FFFF4141, TargetNullValue=#FFFF4141}" Margin="0,0,5,0" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockName" Text="{Binding ShopItemName, ElementName=userControlShopItem, FallbackValue=XXXXXXXXXXXX, StringFormat=\{0:N0\}, TargetNullValue=0}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" Margin="5,0,0,0" FontFamily="{StaticResource mikachan}"/>
+        <TextBlock x:Name="textBlockPrice" Text="{Binding ShopItemPrice, ElementName=userControlShopItem, FallbackValue=(X\,XXX\,XXX), StringFormat=(\{0:N0\}), TargetNullValue=0}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" Margin="0,0,5,0" FontFamily="{StaticResource mikachan}"/>
         <Rectangle x:Name="rectangleFlasher" Fill="White" Opacity="0"/>
     </Grid>
 </UserControl>

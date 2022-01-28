@@ -192,9 +192,12 @@ namespace CandyClicker
         private readonly List<int> previousClicksPerSecond = new();
 
         private readonly System.Timers.Timer timerPerSecond = new(1000);
+        private readonly System.Timers.Timer timerCandyPerSecond = new(10);
         private readonly System.Timers.Timer timerCandyRain = new();
         private readonly System.Timers.Timer timerAutoSave = new(10000);
         private readonly Random rng = new();
+
+        private uint candyPerSecondCycleCount = 0;
 
         private static readonly byte[] saveHeader = new byte[8] { 0x43, 0x6E, 0x64, 0x79, 0x43, 0x6C, 0x63, 0x6B };  // "CndyClck"
 
@@ -215,6 +218,9 @@ namespace CandyClicker
 
             timerPerSecond.Elapsed += TimerPerSecond_Elapsed;
             timerPerSecond.Start();
+
+            timerCandyPerSecond.Elapsed += TimerCandyPerSecond_Elapsed;
+            timerCandyPerSecond.Start();
 
             timerCandyRain.Elapsed += TimerCandyRain_Elapsed;
             timerCandyRain.Start();
@@ -866,26 +872,38 @@ namespace CandyClicker
             }
         }
 
+        private void TimerCandyPerSecond_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            ulong amount = Dispatcher.Invoke(() => CandyPSReincarnationMultiplier <= 1
+                ? CandyPerSecond
+                : CandyPerSecond <= CandyPerSecond * CandyPSReincarnationMultiplier
+                    ? CandyPerSecond * CandyPSReincarnationMultiplier
+                    : ulong.MaxValue);
+            uint executionsPerSecond = 1000 / (uint)timerCandyPerSecond.Interval;
+            if (amount == 0)
+            {
+                return;
+            }
+            ulong perTick = amount / executionsPerSecond;
+            ulong remainder = amount % executionsPerSecond;
+            ulong toGive = perTick;
+            if (remainder != 0 && candyPerSecondCycleCount % (executionsPerSecond / remainder) == 0)
+            {
+                toGive++;
+            }
+            Dispatcher.Invoke(() => GiveCandy(toGive));
+            candyPerSecondCycleCount++;
+            if (candyPerSecondCycleCount == executionsPerSecond)
+            {
+                candyPerSecondCycleCount = 0;
+            }
+        }
+
         private void TimerPerSecond_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
                 _ = gridCandyClicker.Focus();
-                if (CandyPSReincarnationMultiplier <= 1)
-                {
-                    GiveCandy(CandyPerSecond);
-                }
-                else
-                {
-                    if (CandyPerSecond <= CandyPerSecond * CandyPSReincarnationMultiplier)
-                    {
-                        GiveCandy(CandyPerSecond * CandyPSReincarnationMultiplier);
-                    }
-                    else
-                    {
-                        GiveCandy(ulong.MaxValue);
-                    }
-                }
                 if (!isEndGameVisualActive && CandyPSReincarnationMultiplier == ulong.MaxValue)
                 {
                     EndGameVisualUpdate();
