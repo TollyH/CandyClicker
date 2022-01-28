@@ -192,7 +192,7 @@ namespace CandyClicker
         private readonly List<int> previousClicksPerSecond = new();
 
         private readonly System.Timers.Timer timerPerSecond = new(1000);
-        private readonly System.Timers.Timer timerCandyPerSecond = new(10);
+        private readonly System.Timers.Timer timerCandyPerSecond = new(50);
         private readonly System.Timers.Timer timerCandyRain = new();
         private readonly System.Timers.Timer timerAutoSave = new(10000);
         private readonly Random rng = new();
@@ -549,6 +549,7 @@ namespace CandyClicker
         private void OpenHelpPopUp()
         {
             timerPerSecond.Stop();
+            timerCandyPerSecond.Stop();
             gridHelp.Visibility = Visibility.Visible;
 
             Storyboard sb = new()
@@ -572,6 +573,7 @@ namespace CandyClicker
         private void CloseHelpPopUp()
         {
             timerPerSecond.Start();
+            timerCandyPerSecond.Start();
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -595,6 +597,7 @@ namespace CandyClicker
         private void OpenCheatPopUp()
         {
             timerPerSecond.Stop();
+            timerCandyPerSecond.Stop();
 
             textBoxCheatCandies.Text = CandyScore.ToString();
             textBoxCheatPerClick.Text = CandyPerClick.ToString();
@@ -631,6 +634,7 @@ namespace CandyClicker
         private void CloseCheatPopUp()
         {
             timerPerSecond.Start();
+            timerCandyPerSecond.Start();
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -665,6 +669,7 @@ namespace CandyClicker
         private void OpenReincarnationPopUp()
         {
             timerPerSecond.Stop();
+            timerCandyPerSecond.Stop();
             ulong reincarnationCost = CalculateReincarnationCost();
             textBlockReincarnateDescription.Text = $"Reincarnation allows you to restart the game with a permanent multiplier added to your candies per second. For every {100000000 * (ReincarnateCounter + 1):N0} candies you currently have, you will get an additional multiplier on your candies per second after reincarnation. Your current candies, candies per second, candies per click, shop prices, and previous reincarnations will all be reset. You must have at least {reincarnationCost:N0} candies to reincarnate.";
             if (CandyScore >= reincarnationCost)
@@ -712,6 +717,7 @@ namespace CandyClicker
         private void CloseReincarnationPopUp()
         {
             timerPerSecond.Start();
+            timerCandyPerSecond.Start();
             Storyboard sb = new()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.25))
@@ -975,42 +981,39 @@ namespace CandyClicker
             {
                 Dispatcher.Invoke(() =>
                 {
-                    for (int i = 0; i < (Width / MinWidth); i++)
+                    double speedModifier = rng.Next(2, 4) + rng.NextDouble();
+                    Image newRain = new()
                     {
-                        double speedModifier = rng.Next(2, 4) + rng.NextDouble();
-                        Image newRain = new()
-                        {
-                            Source = imageCandy.Source,
-                            Width = 43 - (speedModifier * speedModifier),
-                            Height = 43 - (speedModifier * speedModifier),
-                            Stretch = Stretch.Uniform,
-                            StretchDirection = StretchDirection.Both,
-                            Opacity = 0.5
-                        };
-                        _ = canvasCandyRain.Children.Add(newRain);
-                        double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)newRain.Width);
-                        Canvas.SetLeft(newRain, xCoord);
-                        Canvas.SetTop(newRain, -newRain.Height);
+                        Source = imageCandy.Source,
+                        Width = 43 - (speedModifier * speedModifier),
+                        Height = 43 - (speedModifier * speedModifier),
+                        Stretch = Stretch.Uniform,
+                        StretchDirection = StretchDirection.Both,
+                        Opacity = 0.5
+                    };
+                    _ = canvasCandyRain.Children.Add(newRain);
+                    double xCoord = rng.Next((int)canvasCandyRain.ActualWidth - (int)newRain.Width);
+                    Canvas.SetLeft(newRain, xCoord);
+                    Canvas.SetTop(newRain, -newRain.Height);
 
-                        Storyboard sb = new()
-                        {
-                            Duration = new Duration(TimeSpan.FromSeconds(speedModifier))
-                        };
+                    Storyboard sb = new()
+                    {
+                        Duration = new Duration(TimeSpan.FromSeconds(speedModifier))
+                    };
 
-                        DoubleAnimation moveDown = new()
-                        {
-                            From = -newRain.Height,
-                            To = canvasCandyRain.ActualHeight,
-                            Duration = sb.Duration
-                        };
-                        Storyboard.SetTarget(moveDown, newRain);
-                        Storyboard.SetTargetProperty(moveDown, new PropertyPath(Canvas.TopProperty));
-                        sb.Children.Add(moveDown);
+                    DoubleAnimation moveDown = new()
+                    {
+                        From = -newRain.Height,
+                        To = canvasCandyRain.ActualHeight,
+                        Duration = sb.Duration
+                    };
+                    Storyboard.SetTarget(moveDown, newRain);
+                    Storyboard.SetTargetProperty(moveDown, new PropertyPath(Canvas.TopProperty));
+                    sb.Children.Add(moveDown);
 
-                        sb.Completed += Rain_Completed;
+                    sb.Completed += Rain_Completed;
 
-                        sb.Begin();
-                    }
+                    sb.Begin();
                 });
             }
         }
