@@ -26,15 +26,15 @@ If either the save header or the MD5 hash do not match their expected values, th
 
 ## Customisations Save
 
-| Bytes       | Description                                      |
-|-------------|--------------------------------------------------|
-|`0x00`       | Background Red                                   |
-|`0x01`       | Background Green                                 |
-|`0x02`       | Background Blue                                  |
-|`0x03`       | Foreground Red                                   |
-|`0x04`       | Foreground Green                                 |
-|`0x05`       | Foreground Blue                                  |
-|`0x06 - EOF` | Image Path (See below)                           |
+| Bytes       | Description                       |
+|-------------|-----------------------------------|
+|`0x00`       | Background Red                    |
+|`0x01`       | Background Green                  |
+|`0x02`       | Background Blue                   |
+|`0x03`       | Foreground Red                    |
+|`0x04`       | Foreground Green                  |
+|`0x05`       | Foreground Blue                   |
+|`0x06 - EOF` | Image Path (Optional - See below) |
 
 ### Image Path
 

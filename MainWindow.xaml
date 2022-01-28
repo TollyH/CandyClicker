@@ -156,6 +156,12 @@
                                     <LineBreak/>
                                 </Paragraph>
                                 <Paragraph>
+                                    <Run Text="Customisation" FontSize="20"/>
+                                    <LineBreak/>
+                                    <Run Text="By right clicking the large candy 5 times in a row, you can open a panel that will allow you to customise the appearance of the game. This includes both colours and the source for the large candy image."/>
+                                    <LineBreak/>
+                                </Paragraph>
+                                <Paragraph>
                                     <Run Text="Credits and Attributions" FontSize="20"/>
                                     <LineBreak/>
                                     <Run Text="Programming and Design:"/>
