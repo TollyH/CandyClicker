@@ -55,6 +55,7 @@ namespace CandyClicker
 
         public ulong ReincarnateCounter { get; set; }
         public ulong OverflowCounter { get; set; }
+        public ulong ShopMultiplier { get; set; }
 
         public bool HasBeenCustomised { get; private set; }
 
@@ -272,7 +273,14 @@ namespace CandyClicker
         {
             HasBeenCustomised = false;
             File.Delete(customisationPath);
-            FadeBackgroundColor(new Color() { R = 0x86, G = 0xFF, B = 0xFA, A = 0xFF });
+            if (isEndGameVisualActive)
+            {
+                FadeBackgroundColor(new Color() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF });
+            }
+            else
+            {
+                FadeBackgroundColor(new Color() { R = 0x86, G = 0xFF, B = 0xFA, A = 0xFF });
+            }
             Application.Current.Resources["MainForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0x41, B = 0x41, A = 0xFF });
             Application.Current.Resources["DarkForeground"] = new SolidColorBrush(new Color() { R = 0xC7, G = 0x23, B = 0x23, A = 0xFF });
             Application.Current.Resources["SecondaryForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0xFF, B = 0xFF, A = 0xFF });
@@ -363,13 +371,14 @@ namespace CandyClicker
                     CandyPSReincarnationMultiplier = BitConverter.ToUInt64(saveBytes, 24);
                     ReincarnateCounter = BitConverter.ToUInt64(saveBytes, 32);
                     OverflowCounter = BitConverter.ToUInt64(saveBytes, 40);
+                    ShopMultiplier = BitConverter.ToUInt64(saveBytes, 48);
 
                     UpdateRainDuration();
 
                     ShopPurchasedCount = new ulong[Shop.CandyShop.Length];
-                    for (int i = 0; i < (saveBytes.Length - 64) / 8 && i < ShopPurchasedCount.Length; i++)
+                    for (int i = 0; i < (saveBytes.Length - 72) / 8 && i < ShopPurchasedCount.Length; i++)
                     {
-                        ShopPurchasedCount[i] = BitConverter.ToUInt64(saveBytes, (i * 8) + 48);
+                        ShopPurchasedCount[i] = BitConverter.ToUInt64(saveBytes, (i * 8) + 56);
                     }
                 }
                 catch
@@ -386,6 +395,7 @@ namespace CandyClicker
                 CandyPSReincarnationMultiplier = 1;
                 ReincarnateCounter = 0;
                 OverflowCounter = 0;
+                ShopMultiplier = 1;
                 ShopPurchasedCount = new ulong[Shop.CandyShop.Length];
                 timerCandyRain.Interval = 10000;
 
@@ -402,6 +412,7 @@ namespace CandyClicker
             candyScoreBytes.AddRange(BitConverter.GetBytes(CandyPSReincarnationMultiplier));
             candyScoreBytes.AddRange(BitConverter.GetBytes(ReincarnateCounter));
             candyScoreBytes.AddRange(BitConverter.GetBytes(OverflowCounter));
+            candyScoreBytes.AddRange(BitConverter.GetBytes(ShopMultiplier));
 
             List<byte> purchasedItemsBytes = new();
             foreach (ulong count in ShopPurchasedCount)
@@ -432,8 +443,12 @@ namespace CandyClicker
                 {
                     ShopItemName = item.Name,
                     ShopItemPrice = CalculateInflatedCost(item.Price, ShopPurchasedCount[i]),
-                    ToolTip = $"+{item.AdditionalPerClick} per click, +{item.AdditionalPerSecond} per second, {ShopPurchasedCount[i]} already purchased"
+                    ToolTip = $"+{item.AdditionalPerClick * ShopMultiplier} per click, +{item.AdditionalPerSecond * ShopMultiplier} per second, {ShopPurchasedCount[i]} already purchased"
                 };
+                if (ShopMultiplier >= 2)
+                {
+                    newControl.ToolTip += $", x{ShopMultiplier} applied";
+                }
                 newControl.MouseDown += ShopItem_MouseDown;
                 _ = stackPanelShop.Children.Add(newControl);
             }
@@ -721,6 +736,7 @@ namespace CandyClicker
             textBoxCheatPSMultiplier.Text = CandyPSReincarnationMultiplier.ToString();
             textBoxCheatReincarnationCount.Text = ReincarnateCounter.ToString();
             textBoxCheatOverflowCount.Text = OverflowCounter.ToString();
+            textBoxCheatShopMultiplier.Text = ShopMultiplier.ToString();
             textBoxCheatSpecialProgress.Text = clicksTowardSpecial.ToString();
             checkBoxCheatTaskbarHide.IsChecked = !ShowInTaskbar;
             checkBoxCheatDisableSaveChecks.IsChecked = !doSaveIntegrityChecks;
@@ -792,15 +808,26 @@ namespace CandyClicker
             {
                 if (CandyPSReincarnationMultiplier == ulong.MaxValue)
                 {
-                    buttonAgreeToReincarnate.IsEnabled = false;
-                    buttonAgreeToReincarnate.Content = "Max Limit Reached";
-                    buttonAgreeToReincarnate.Foreground = Brushes.Gray;
+                    textBlockReincarnateDescription.Text = $"You have reached the reincarnation limit. Reincarnating now will reset everything, including your reincarnation limit, and instead apply a multiplier to the shop in the new game for every 60 overflow stars you currently have.";
+                    if (OverflowCounter >= (ShopMultiplier + 1) * 60)
+                    {
+                        buttonAgreeToReincarnate.IsEnabled = true;
+                        buttonAgreeToReincarnate.Content = "Reincarnate (!)";
+                        buttonAgreeToReincarnate.SetResourceReference(ForegroundProperty, "SecondaryForeground");
+                        textBlockReincarnateDescription.Text += $" This works out to {OverflowCounter / 60}x currently.";
+                    }
+                    else
+                    {
+                        buttonAgreeToReincarnate.IsEnabled = false;
+                        buttonAgreeToReincarnate.Content = "Not Enough Stars";
+                        buttonAgreeToReincarnate.Foreground = Brushes.Gray;
+                    }
                 }
                 else
                 {
                     buttonAgreeToReincarnate.IsEnabled = true;
                     buttonAgreeToReincarnate.Content = "Reincarnate";
-                    buttonAgreeToReincarnate.Foreground = (Brush)new BrushConverter().ConvertFromString("#FFF9F9F9");
+                    buttonAgreeToReincarnate.SetResourceReference(ForegroundProperty, "SecondaryForeground");
                     textBlockReincarnateDescription.Text += $" Reincarnating now will give you a {CalculateReincarnationResult():N0}x candy per second multiplier.";
                 }
             }
@@ -885,13 +912,18 @@ namespace CandyClicker
                 if (adjustedPrice <= CandyScore)
                 {
                     CandyScore -= adjustedPrice;
-                    CandyPerClick += purchasedItem.AdditionalPerClick;
-                    CandyPerSecond += purchasedItem.AdditionalPerSecond;
+                    CandyPerClick += purchasedItem.AdditionalPerClick * ShopMultiplier;
+                    CandyPerSecond += purchasedItem.AdditionalPerSecond * ShopMultiplier;
                     ShopPurchasedCount[selectedIndex]++;
                     UpdateRainDuration();
                     ((ShopControl)stackPanelShop.Children[selectedIndex]).ShopItemPrice += (ulong)(purchasedItem.Price * 0.25);
                     ((ShopControl)stackPanelShop.Children[selectedIndex]).ToolTip =
-                        $"+{purchasedItem.AdditionalPerClick} per click, +{purchasedItem.AdditionalPerSecond} per second, {ShopPurchasedCount[selectedIndex]} already purchased";
+                        $"+{purchasedItem.AdditionalPerClick * ShopMultiplier} per click, +{purchasedItem.AdditionalPerSecond * ShopMultiplier} per second, {ShopPurchasedCount[selectedIndex]} already purchased";
+
+                    if (ShopMultiplier >= 2)
+                    {
+                        ((ShopControl)stackPanelShop.Children[selectedIndex]).ToolTip += $", x{ShopMultiplier} applied";
+                    }
                     UpdateShopPriceColours();
                 }
                 else
@@ -1189,8 +1221,17 @@ namespace CandyClicker
         {
             if (CandyScore >= CalculateReincarnationCost())
             {
-                CandyPSReincarnationMultiplier = CalculateReincarnationResult();
-                ReincarnateCounter++;
+                if (CandyPSReincarnationMultiplier != ulong.MaxValue)
+                {
+                    CandyPSReincarnationMultiplier = CalculateReincarnationResult();
+                    ReincarnateCounter++;
+                }
+                else
+                {
+                    CandyPSReincarnationMultiplier = 1;
+                    ReincarnateCounter = 0;
+                    ShopMultiplier = OverflowCounter / 60;
+                }
                 CandyScore = 0;
                 CandyPerSecond = 0;
                 UpdateRainDuration();
@@ -1309,6 +1350,7 @@ namespace CandyClicker
             if (ulong.TryParse(textBoxCheatCandies.Text, out _))
             {
                 CandyScore = ulong.Parse(textBoxCheatCandies.Text);
+                UpdateShopPriceColours();
             }
             else
             {
@@ -1355,6 +1397,15 @@ namespace CandyClicker
             else
             {
                 failed += "Overflow Counter, ";
+            }
+            if (ulong.TryParse(textBoxCheatShopMultiplier.Text, out _))
+            {
+                ShopMultiplier = ulong.Parse(textBoxCheatShopMultiplier.Text);
+                ReloadShop();
+            }
+            else
+            {
+                failed += "Shop Multiplier, ";
             }
             if (uint.TryParse(textBoxCheatSpecialProgress.Text, out _) && uint.Parse(textBoxCheatSpecialProgress.Text) <= 999)
             {

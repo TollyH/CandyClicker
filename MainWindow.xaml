@@ -81,6 +81,8 @@
                         <TextBox x:Name="textBoxCheatReincarnationCount" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Overflow Count"/>
                         <TextBox x:Name="textBoxCheatOverflowCount" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
+                        <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Shop Multiplier"/>
+                        <TextBox x:Name="textBoxCheatShopMultiplier" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <TextBlock Margin="10,5,10,5" Foreground="{DynamicResource MainForeground}" TextWrapping="Wrap" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Text="Set Candy Meter Progression (0-999)"/>
                         <TextBox x:Name="textBoxCheatSpecialProgress" Margin="10,5,10,5" SelectionBrush="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource MainForeground}" FontSize="16" Background="Transparent"/>
                         <CheckBox x:Name="checkBoxCheatTaskbarHide" Margin="10,5,10,5" Background="{DynamicResource MainForeground}" Foreground="{DynamicResource MainForeground}" BorderBrush="{DynamicResource DarkForeground}" BorderThickness="3" Content="Hide In Taskbar" FontFamily="{StaticResource mikachan}" FontSize="16" FontWeight="Bold" Padding="5,1,0,0"/>
@@ -139,6 +141,7 @@
                                     <LineBreak/>
                                     <Run Text="Reincarnation allows you to start the game anew with all your stats and the shop reset. In return, you will be granted a multiplier on your candies per second in your new game. You can reincarnate more than once, although each reincarnation will be harder to attain than the last, and you cannot reincarnate in a way that would result in you having a smaller multiplier than you currently have. For more information, click the reincarnation button in the top-left."/>
                                     <Image Source="/Images/candy-reincarnate.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    <Run Text="Once you have reached the limit of the multiplier you can be given, reincarnating a further time will still cause the game to reset, however you will also lose your CPS multiplier and instead the shop will be upgraded with a multiplier for every 60 overflow stars you currently have."/>
                                     <LineBreak/>
                                 </Paragraph>
                                 <Paragraph>

@@ -13,7 +13,8 @@ All gameplay values saved by the application are stored as a list of 8 bytes (64
 |`0x20 - 0x27`    | Reincarnation Multiplier                         |
 |`0x28 - 0x2F`    | Reincarnation Counter                            |
 |`0x30 - 0x37`    | Overflow Counter                                 |
-|`0x38 - ....`    | Shop Purchase Counters (See below)               |
+|`0x38 - 0x3F`    | Shop Multiplier                                  |
+|`0x40 - ....`    | Shop Purchase Counters (See below)               |
 |`Final 16 Bytes` | MD5 Hash of the save file (excluding the header) |
 
 ### Shop Purchase Counters
