@@ -6,7 +6,7 @@ All gameplay values saved by the application are stored as a list of 8 bytes (64
 
 | Byte Range      | Description                                      |
 |-----------------|--------------------------------------------------|
-|`0x00 - 0x07`    | Save Header (Always the string `CndyClck`)       |
+|`0x00 - 0x07`    | Save Header (Currently the string `CdClk1.1`)    |
 |`0x08 - 0x0F`    | Total Candy Score                                |
 |`0x10 - 0x17`    | Candy Per Click                                  |
 |`0x18 - 0x1F`    | Candy Per Second                                 |

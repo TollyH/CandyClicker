@@ -209,7 +209,7 @@ namespace CandyClicker
 
         private uint candyPerSecondCycleCount = 0;
 
-        private static readonly byte[] saveHeader = new byte[8] { 0x43, 0x6E, 0x64, 0x79, 0x43, 0x6C, 0x63, 0x6B };  // "CndyClck"
+        private static readonly byte[] saveHeader = new byte[8] { 0x43, 0x64, 0x43, 0x6C, 0x6B, 0x31, 0x2E, 0x31 };  // "CdClk1.1"
 
         public MainWindow()
         {
@@ -354,8 +354,7 @@ namespace CandyClicker
                     using MD5 md5 = MD5.Create();
                     if (!md5.ComputeHash(saveBytes[..^16]).SequenceEqual(hashBytes) && doSaveIntegrityChecks)
                     {
-                        _ = MessageBox.Show("Modified or corrupt save file detected", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Environment.Exit(1);
+                        throw new ApplicationException("Invalid save file");
                     }
 
                     CandyScore = BitConverter.ToUInt64(saveBytes, 0);
@@ -375,7 +374,7 @@ namespace CandyClicker
                 }
                 catch
                 {
-                    _ = MessageBox.Show("Save file is corrupt", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _ = MessageBox.Show("Modified or corrupt save file detected", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
             }
