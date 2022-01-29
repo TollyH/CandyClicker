@@ -254,7 +254,7 @@ namespace CandyClicker
                 customForeground = foregroundColor.Value;
                 Application.Current.Resources["MainForeground"] = new SolidColorBrush(foregroundColor.Value);
                 Application.Current.Resources["DarkForeground"] = new SolidColorBrush(
-                    new Color() { A = 255, R = (byte)(foregroundColor.Value.R / 2), G = (byte)(foregroundColor.Value.G / 2), B = (byte)(foregroundColor.Value.B / 2) }
+                    new Color() { A = 0xFF, R = (byte)(foregroundColor.Value.R / 2), G = (byte)(foregroundColor.Value.G / 2), B = (byte)(foregroundColor.Value.B / 2) }
                 );
                 Application.Current.Resources["SecondaryForeground"] = (foregroundColor.Value.R + foregroundColor.Value.G + foregroundColor.Value.B) / 3 < 127 ?
                     Brushes.White : Brushes.Black;
@@ -274,7 +274,7 @@ namespace CandyClicker
             File.Delete(customisationPath);
             FadeBackgroundColor(new Color() { R = 0x86, G = 0xFF, B = 0xFA, A = 0xFF });
             Application.Current.Resources["MainForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0x41, B = 0x41, A = 0xFF });
-            Application.Current.Resources["DarkForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0xC7, B = 0x23, A = 0x23 });
+            Application.Current.Resources["DarkForeground"] = new SolidColorBrush(new Color() { R = 0xC7, G = 0x23, B = 0x23, A = 0xFF });
             Application.Current.Resources["SecondaryForeground"] = new SolidColorBrush(new Color() { R = 0xFF, G = 0xFF, B = 0xFF, A = 0xFF });
             Application.Current.Resources["DialogBackground"] = new SolidColorBrush(new Color() { R = 0xF1, G = 0xF1, B = 0xF1, A = 0xFF });
             customImagePath = null;
@@ -585,7 +585,7 @@ namespace CandyClicker
 
             await Task.Delay(5000);
 
-            rectangleBonusProgress.Fill = textBlockScore.Foreground;
+            rectangleBonusProgress.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, "MainForeground");
             textBlockSpecial.Visibility = Visibility.Hidden;
             if (currentEasterEggState == EasterEggState.Normal && !HasBeenCustomised)
             {
