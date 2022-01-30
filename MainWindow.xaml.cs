@@ -789,12 +789,13 @@ namespace CandyClicker
 
         private ulong CalculateReincarnationCost()
         {
-            return 100000000 * (CandyPSReincarnationMultiplier + 1) * (ReincarnateCounter + 1);
+            ulong result = 100000000 * (CandyPSReincarnationMultiplier + 1) * (ReincarnateCounter + 1);
+            return result >= CandyPSReincarnationMultiplier * 100000000 * ReincarnateCounter ? result : ulong.MaxValue;
         }
 
         private ulong CalculateReincarnationResult()
         {
-            ulong result = CandyScore / 100000000 / (ReincarnateCounter + 1);
+            ulong result = (OverflowCounter == 0 ? CandyScore : ulong.MaxValue) / 100000000 / (ReincarnateCounter + 1);
             return result >= CandyPSReincarnationMultiplier ? result : ulong.MaxValue;
         }
 
@@ -803,8 +804,8 @@ namespace CandyClicker
             timerPerSecond.Stop();
             timerCandyPerSecond.Stop();
             ulong reincarnationCost = CalculateReincarnationCost();
-            textBlockReincarnateDescription.Text = $"Reincarnation allows you to restart the game with a permanent multiplier added to your candies per second. For every {100000000 * (ReincarnateCounter + 1):N0} candies you currently have, you will get an additional multiplier on your candies per second after reincarnation. Your current candies, candies per second, candies per click, shop prices, and previous reincarnations will all be reset. You must have at least {reincarnationCost:N0} candies to reincarnate.";
-            if (CandyScore >= reincarnationCost)
+            textBlockReincarnateDescription.Text = $"Reincarnation allows you to restart the game with a permanent multiplier added to your candies per second. For every {100000000 * (ReincarnateCounter + 1):N0} candies you currently have, you will get an additional multiplier on your candies per second after reincarnation. Your current candies, candies per second, candies per click, shop prices, and previous reincarnations will all be reset. If you have any overflow stars, your candy score will be treated as if it were the limit. You must have at least {reincarnationCost:N0} candies to reincarnate.";
+            if (CandyScore >= reincarnationCost || OverflowCounter >= 1)
             {
                 if (CandyPSReincarnationMultiplier == ulong.MaxValue)
                 {
@@ -1219,7 +1220,7 @@ namespace CandyClicker
 
         private void ButtonAgreeToReincarnate_Click(object sender, RoutedEventArgs e)
         {
-            if (CandyScore >= CalculateReincarnationCost())
+            if (CandyScore >= CalculateReincarnationCost() || OverflowCounter >= 1)
             {
                 if (CandyPSReincarnationMultiplier != ulong.MaxValue)
                 {
