@@ -19,7 +19,7 @@ All gameplay values saved by the application are stored as a list of 8 bytes (64
 
 ### Shop Purchase Counters
 
-The number of times that each item in the shop has been purchased is stored from byte `0x38` onwards until, but not including, the final 16 bytes of the save file. Each value is stored in the same way as all the others in the file (8 bytes / 64 bits, unsigned, little endian), and they are stored in the same order that the shop items appear in-game. This means that in order to find the value for any one item, you navigate to byte offset `item_index * 0x08 + 0x38` where `item_index` is the 0-based index of the shop item as shown in-game, and read the next 8 bytes / 64 bits.
+The number of times that each item in the shop has been purchased is stored from byte `0x40` onwards until, but not including, the final 16 bytes of the save file. Each value is stored in the same way as all the others in the file (8 bytes / 64 bits, unsigned, little endian), and they are stored in the same order that the shop items appear in-game. This means that in order to find the value for any one item, you navigate to byte offset `item_index * 0x08 + 0x40` where `item_index` is the 0-based index of the shop item as shown in-game, and read the next 8 bytes / 64 bits.
 
 ### Integrity Measures and Modification
 
