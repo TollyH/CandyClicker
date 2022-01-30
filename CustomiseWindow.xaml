@@ -1,4 +1,8 @@
-﻿<Window x:Class="CandyClicker.CustomiseWindow"
+﻿<!--
+    Candy Clicker ver. 1.1.0
+    Copyright © 2021-2022  Ptolemy Hill
+-->
+<Window x:Class="CandyClicker.CustomiseWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

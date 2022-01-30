@@ -1,4 +1,8 @@
-﻿using Microsoft.Win32;
+﻿/*
+ * Candy Clicker ver. 1.1.0
+ * Copyright © 2021-2022  Ptolemy Hill
+ */
+using Microsoft.Win32;
 using System;
 using System.Windows;
 using System.Windows.Media;
