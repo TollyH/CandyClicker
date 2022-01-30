@@ -808,7 +808,7 @@ namespace CandyClicker
             {
                 if (CandyPSReincarnationMultiplier == ulong.MaxValue)
                 {
-                    textBlockReincarnateDescription.Text = $"You have reached the reincarnation limit. Reincarnating now will reset everything, including your reincarnation limit, and instead apply a multiplier to the shop in the new game for every 60 overflow stars you currently have.";
+                    textBlockReincarnateDescription.Text = $"You have reached the reincarnation limit. Reincarnating now will reset everything, including your candies per second multiplier, and instead apply a multiplier to the shop in the new game for every 60 overflow stars you currently have.";
                     if (OverflowCounter >= (ShopMultiplier + 1) * 60)
                     {
                         buttonAgreeToReincarnate.IsEnabled = true;
