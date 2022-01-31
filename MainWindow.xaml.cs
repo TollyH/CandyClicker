@@ -264,7 +264,10 @@ namespace CandyClicker
             if (imageFilePath != null)
             {
                 customImagePath = imageFilePath;
-                imageCandy.Source = new BitmapImage(new Uri(imageFilePath));
+                if (currentEasterEggState == EasterEggState.Normal)
+                {
+                    imageCandy.Source = new BitmapImage(new Uri(imageFilePath));
+                }
             }
             SaveCustomisations();
         }
@@ -291,7 +294,12 @@ namespace CandyClicker
 
         public (Color, Color, string) GetCustomisations()
         {
-            return (((SolidColorBrush)Background).Color, ((SolidColorBrush)Application.Current.Resources["MainForeground"]).Color, customImagePath);
+            return
+            (
+                HasBeenCustomised ? customBackground : ((SolidColorBrush)Background).Color,
+                HasBeenCustomised ? customForeground : ((SolidColorBrush)Application.Current.Resources["MainForeground"]).Color,
+                customImagePath
+            );
         }
 
         private void LoadCustomisations()
