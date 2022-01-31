@@ -459,7 +459,14 @@ namespace CandyClicker
         {
             foreach (ShopControl control in stackPanelShop.Children)
             {
-                control.PriceForeground = control.ShopItemPrice <= CandyScore ? textBlockScore.Foreground : Brushes.Gray;
+                if (control.ShopItemPrice <= CandyScore)
+                {
+                    control.SetResourceReference(ShopControl.PriceForegroundProperty, "MainForeground");
+                }
+                else
+                {
+                    control.PriceForeground = Brushes.Gray;
+                }
             }
         }
 
@@ -983,7 +990,7 @@ namespace CandyClicker
 
                 rightClicksInRow = 0;
 
-                if (!HasBeenCustomised && (!isSpecialActive || currentEasterEggState != EasterEggState.Normal))
+                if (!(HasBeenCustomised && currentEasterEggState == EasterEggState.Normal) && (!isSpecialActive || currentEasterEggState != EasterEggState.Normal))
                 {
                     imageCandy.Source = easterEggImages[currentEasterEggState][rng.Next(easterEggImages[currentEasterEggState].Length)];
                     if (currentEasterEggState == EasterEggState.Normal)
@@ -1042,7 +1049,7 @@ namespace CandyClicker
                     sb.Begin();
                 }
             }
-            else if (e.ChangedButton == MouseButton.Right && !OwnedWindows.OfType<CustomiseWindow>().Any() && currentEasterEggState == EasterEggState.Normal)
+            else if (e.ChangedButton == MouseButton.Right && !OwnedWindows.OfType<CustomiseWindow>().Any())
             {
                 rightClicksInRow++;
                 if (rightClicksInRow >= 5)
@@ -1311,21 +1318,26 @@ namespace CandyClicker
                 spawnRareCandyKeyProgression = 0;
             }
 
-            if (!HasBeenCustomised)
+            foreach (EasterEggState state in Enum.GetValues(typeof(EasterEggState)))
             {
-                foreach (EasterEggState state in Enum.GetValues(typeof(EasterEggState)))
+                if (e.Key == easterEggKeys[state][easterEggKeyProgression[state]])
                 {
-                    if (e.Key == easterEggKeys[state][easterEggKeyProgression[state]])
+                    easterEggKeyProgression[state]++;
+                    if (easterEggKeyProgression[state] == easterEggKeys[state].Length)
                     {
-                        easterEggKeyProgression[state]++;
-                        if (easterEggKeyProgression[state] == easterEggKeys[state].Length)
-                        {
-                            easterEggKeyProgression[state] = 0;
-                            currentEasterEggState = state;
+                        easterEggKeyProgression[state] = 0;
+                        currentEasterEggState = state;
 
+                        if (state == EasterEggState.Normal && HasBeenCustomised)
+                        {
+                            FadeBackgroundColor(customBackground);
+                            imageCandy.Source = new BitmapImage(new Uri(customImagePath ?? "pack://application:,,,/Images/candy.png"));
+                        }
+                        else
+                        {
                             Color targetColor = state == EasterEggState.Normal && isEndGameVisualActive
-                                ? (new() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF })
-                                : easterEggBackgroundColors[state];
+                            ? (new() { R = 0xE5, G = 0xF1, B = 0x9E, A = 0xFF })
+                            : easterEggBackgroundColors[state];
 
                             imageCandy.Source = state == EasterEggState.Normal && isSpecialActive
                                 ? new BitmapImage(new Uri("pack://application:,,,/Images/candy-special.png"))
@@ -1337,10 +1349,10 @@ namespace CandyClicker
                             }
                         }
                     }
-                    else
-                    {
-                        easterEggKeyProgression[state] = 0;
-                    }
+                }
+                else
+                {
+                    easterEggKeyProgression[state] = 0;
                 }
             }
         }
