@@ -809,13 +809,13 @@ namespace CandyClicker
             {
                 if (CandyPSReincarnationMultiplier == ulong.MaxValue)
                 {
-                    textBlockReincarnateDescription.Text = $"You have reached the reincarnation limit. Reincarnating now will reset everything, including your candies per second multiplier, and instead apply a multiplier to the shop in the new game for every 60 overflow stars you currently have.";
-                    if (OverflowCounter >= (ShopMultiplier + 1) * 60)
+                    textBlockReincarnateDescription.Text = $"You have reached the reincarnation limit. Reincarnating now will reset everything, including your candies per second multiplier, and instead apply a multiplier to the shop in the new game for every 60 overflow stars you currently have, added onto any shop multiplier you may already have.";
+                    if (OverflowCounter >= 60)
                     {
                         buttonAgreeToReincarnate.IsEnabled = true;
                         buttonAgreeToReincarnate.Content = "Reincarnate (!)";
                         buttonAgreeToReincarnate.SetResourceReference(ForegroundProperty, "SecondaryForeground");
-                        textBlockReincarnateDescription.Text += $" This works out to {OverflowCounter / 60}x currently.";
+                        textBlockReincarnateDescription.Text += $" This works out to {ShopMultiplier + (OverflowCounter / 60)}x currently.";
                     }
                     else
                     {
@@ -1231,7 +1231,7 @@ namespace CandyClicker
                 {
                     CandyPSReincarnationMultiplier = 1;
                     ReincarnateCounter = 0;
-                    ShopMultiplier = OverflowCounter / 60;
+                    ShopMultiplier += OverflowCounter / 60;
                 }
                 CandyScore = 0;
                 CandyPerSecond = 0;
