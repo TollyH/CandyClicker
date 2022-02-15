@@ -678,7 +678,7 @@ namespace CandyClicker
             }
             DateTime now = DateTime.Now;
             // Christmas
-            if (now.Month == 12 || (now.Month == 1 && now.Day <= 6))
+            if (now.Month == 12 || (now.Month == 1 && now.Day <= 6 && now.Day != 1))
             {
                 imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-season-christmas.png"));
                 FadeBackgroundColor(new Color() { R = 0x64, G = 0xF5, B = 0x5F, A = 0xFF });
@@ -689,6 +689,20 @@ namespace CandyClicker
                 imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-season-halloween.png"));
                 Application.Current.Resources["MainForeground"] = Brushes.OrangeRed;
                 FadeBackgroundColor(new Color() { R = 0x26, G = 0x06, B = 0x61, A = 0xFF });
+            }
+            // New Year's Day
+            else if (now.Month == 1 && now.Day == 1)
+            {
+                imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-season-newyear.png"));
+                Application.Current.Resources["MainForeground"] = Brushes.Gold;
+                FadeBackgroundColor(Colors.Black);
+            }
+            // Valentine's Day
+            else if (now.Month == 2 && now.Day == 14)
+            {
+                imageCandy.Source = new BitmapImage(new Uri("pack://application:,,,/Images/candy-season-valentines.png"));
+                Application.Current.Resources["MainForeground"] = Brushes.DeepPink;
+                FadeBackgroundColor(Colors.LightPink);
             }
         }
 

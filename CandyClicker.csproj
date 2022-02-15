@@ -30,6 +30,8 @@
     <None Remove="Images\candy-reincarnate.png" />
     <None Remove="Images\candy-season-christmas.png" />
     <None Remove="Images\candy-season-halloween.png" />
+    <None Remove="Images\candy-season-newyear.png" />
+    <None Remove="Images\candy-season-valentines.png" />
     <None Remove="Images\candy-special.png" />
     <None Remove="Images\candy.png" />
     <None Remove="Icons\candy_special_dzI_icon.ico" />
@@ -52,6 +54,8 @@
     <Resource Include="Images\candy-reincarnate.png" />
     <Resource Include="Images\candy-season-christmas.png" />
     <Resource Include="Images\candy-season-halloween.png" />
+    <Resource Include="Images\candy-season-newyear.png" />
+    <Resource Include="Images\candy-season-valentines.png" />
     <Resource Include="Images\candy-special.png" />
     <Resource Include="Images\candy.png" />
     <Resource Include="Icons\candy_special_dzI_icon.ico" />
