@@ -1,5 +1,5 @@
 ﻿<!--
-    Candy Clicker ver. 1.1.0
+    Candy Clicker ver. 1.1.1
     Copyright © 2021-2022  Ptolemy Hill
 -->
 <Window x:Name="windowCandyClicker" x:Class="CandyClicker.MainWindow"
@@ -19,7 +19,7 @@
         <TextBlock x:Name="textBlockPerSecond" Text="{Binding CandyPerSecond, ElementName=windowCandyClicker, FallbackValue=+X\,XXX/s, StringFormat=+\{0:N0\}/s, TargetNullValue=0}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,50,10,5" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}"/>
         <TextBlock x:Name="textBlockReincarnated" Text="{Binding CandyPSReincarnationMultiplier, ElementName=windowCandyClicker, FallbackValue=(xXX/s), StringFormat=(x\{0:N0\}/s), TargetNullValue=1}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,73,10,0" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}" Visibility="Hidden" TextAlignment="Center"/>
         <TextBlock x:Name="textBlockClicksPerSecond" Text="0.0 CPS" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,73,0,0" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}"/>
-        <RichTextBox x:Name="richTextBoxCandiesPerSecond" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,50,0,0" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}"  IsReadOnly="True" IsUndoEnabled="False" AutoWordSelection="False" AcceptsReturn="False">
+        <RichTextBox x:Name="richTextBoxCandiesPerSecond" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,50,0,0" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource MainForeground}" FontFamily="{StaticResource mikachan}" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}"  IsReadOnly="True" IsUndoEnabled="False" AutoWordSelection="False" AcceptsReturn="False" Cursor="Arrow">
             <FlowDocument x:Name="flowDocumentCandiesPerSecond">
                 <Paragraph x:Name="paragraphCandiesPerSecond" TextAlignment="Center">
                     <Run x:Name="runCandiesPerSecond" Text="0"/>
