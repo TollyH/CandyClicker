@@ -109,7 +109,7 @@
                                     <Run Text="/c," FontStyle="Italic"/>
                                     <Run Text="and the number of times you are clicking per second is shown in the centre with the abbreviation"/>
                                     <Run Text="CPS." FontStyle="Italic"/>
-                                    <Run Text="After buying items from the shop, you will also begin to gain candies every second without the need to click. The number of candies you are receiving per second is show to the right with the abbreviation"/>
+                                    <Run Text="After buying items from the shop, you will also begin to gain candies every second without the need to click. The number of candies you are receiving per second is shown to the right with the abbreviation"/>
                                     <Run Text="/s." FontStyle="Italic"/>
                                     <LineBreak/>
                                 </Paragraph>
